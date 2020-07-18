@@ -8,7 +8,9 @@ const routes: Routes = [
   { path: '', component: WelcomeComponent },
   { path: 'houses', loadChildren: () => import('./house/house.module').then(m => m.HouseModule), canLoad: [AuthGuard] },
   { path: 'analytics', loadChildren: () => import('./analytics/analytics.module').then(m => m.AnalyticsModule), canLoad: [AuthGuard] },
-  { path: 'roommates', loadChildren: () => import('./roommates/roommates.module').then(m => m.RoommatesModule), canLoad: [AuthGuard] }
+  { path: 'roommates', loadChildren: () => import('./roommates/roommates.module').then(m => m.RoommatesModule), canLoad: [AuthGuard] },
+  { path: 'manager', loadChildren: () => import('./property-manager/property-manager.module').then(
+      m => m.PropertyManagerModule), canLoad: [AuthGuard] }
 ];
 
 @NgModule({

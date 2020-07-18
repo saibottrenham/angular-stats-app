@@ -15,6 +15,10 @@
     <mat-icon>fitness_center</mat-icon>
     <span class="nav-caption">Roommates</span>
   </a>
+  <a mat-list-item routerLink="/manager" (click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>fitness_center</mat-icon>
+    <span class="nav-caption">Property Manager</span>
+  </a>
   <a mat-list-item routerLink="/analytics" (click)="onClose()" *ngIf="(isAuth$ | async)">
     <mat-icon>fitness_center</mat-icon>
     <span class="nav-caption">Analytics</span>
