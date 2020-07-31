@@ -18,8 +18,10 @@ import { environment } from '../environments/environment';
 import { UiService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.reducer';
+import { PropertyManagerService } from './property-manager/property-manager.service';
 
 
 @NgModule({
@@ -38,11 +40,12 @@ import { reducers } from './app.reducer';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireStorageModule,
     AngularFirestoreModule,
     StoreModule.forRoot(reducers),
     AuthModule
   ],
-  providers: [AuthService, TrainingService, UiService],
+  providers: [AuthService, TrainingService, UiService, PropertyManagerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

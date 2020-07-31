@@ -4,7 +4,7 @@ import { PropertyManagerComponent } from './property-manager/property-manager.co
 
 
 const routes: Routes = [
-    { path: '', component: PropertyManagerComponent}
+    { path: '', component: PropertyManagerComponent},
 ];
 
 @NgModule({

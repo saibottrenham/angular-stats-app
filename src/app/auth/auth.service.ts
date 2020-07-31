@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthData } from './auth-data.model';
-import { TrainingService } from '../training/training.service';
 import { UiService } from '../shared/ui.service';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
+import { PropertyManagerService } from '../property-manager/property-manager.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
-    private trainingService: TrainingService,
+    private propertyManagerService: PropertyManagerService,
     private uiService: UiService,
     private store: Store<fromRoot.State>
   ) {}
@@ -23,10 +23,11 @@ export class AuthService {
   initAuthListener() {
     this.afAuth.authState.subscribe(user => {
       if (user) {
+        localStorage.setItem('userId', user.uid);
         this.store.dispatch(new Auth.SetAuthenticated());
         this.router.navigate(['/houses']);
       } else {
-        this.trainingService.cancelSubscriptions();
+        this.propertyManagerService.cancelSubscriptions();
         this.store.dispatch(new Auth.SetUnauthenticated());
         this.router.navigate(['/login']);
       }
@@ -58,6 +59,7 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.setItem('userId', '');
     this.afAuth.auth.signOut();
   }
 }

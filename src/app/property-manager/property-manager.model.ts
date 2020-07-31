@@ -2,6 +2,7 @@ export interface PropertyManager {
     id: string;
     userID?: string;
     name: string;
-    phone: string;
+    mobile: string;
     email: string;
+    imageUrl: string;
 }

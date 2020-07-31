@@ -1,0 +1,68 @@
+:host {
+	position: relative; // container for position items (icon, spinner)
+	// use flexbox to stretch the file drop-zone to full height
+	display: flex;
+	align-items: stretch;
+	// provide minimum height, for cases where no image is set, so no natural height exists
+	min-width: 3em;
+	min-height: 3em;
+}
+
+/**
+ Wrapper element, which is a file drop-zone.
+ */
+.img-container {
+	width: 100%;
+	// use flexbox to vertically centre image
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	// drop-zone styling (clickable, droppable)
+	overflow: hidden;
+	border-radius: 10px;
+	border: dashed 3px transparent;
+	cursor: pointer;
+
+	.placeholder-icon {
+		opacity: 0;
+	}
+	&:hover, &:not(.has-file) {
+		background-color: white;
+		border-color: grey;
+		.placeholder-icon {
+			opacity: 1;
+		}
+	}
+	&:not(.has-file):hover {
+		border-color: grey;
+	}
+	// Styling for a drag and drop area
+	&.drag-invalid { border-color: orangered }
+	&.drag-valid { border-color: forestgreen }
+
+	mat-icon {
+		color: slategrey;
+		font-size: 2.5em;
+		width: 1em;
+		height: 1em;
+	}
+	mat-progress-spinner, mat-icon {
+		pointer-events: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+		text-align: center;
+	}
+}
+
+.img-preview {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.in-progress {
+	opacity: 0.3;
+}
