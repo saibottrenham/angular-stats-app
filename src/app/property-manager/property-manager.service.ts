@@ -65,6 +65,11 @@ export class PropertyManagerService {
     this.uiService.addToDB(e, this.propertyManagersPath, 'Added Property Manager Successfully');
   }
 
+  deletePropertyManager(e: PropertyManager) {
+    e.userID = localStorage.getItem('userId');
+    this.uiService.deleteFromDB(e, this.propertyManagersPath, 'Deleted Property Manager Successfully');
+  }
+
   cancelSubscriptions() {
     this.fbSubs.forEach(sub => sub.unsubscribe());
   }

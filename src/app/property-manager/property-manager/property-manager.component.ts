@@ -41,8 +41,8 @@ export class PropertyManagerComponent implements OnInit {
     console.log('not yet implemented');
   }
 
-  deleteManager() {
-    console.log('not yet implemented');
+  deleteManager(e: PropertyManager) {
+    this.propertyManagerService.deletePropertyManager(e);
   }
 
 }

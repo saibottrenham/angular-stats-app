@@ -57,4 +57,18 @@ export class UiService {
       this.showSnackbar('Something Went wrong, can\'t update table', null, 3000);
     });
   }
+
+  deleteFromDB(data: any,  path: string, snackbarMessage: string = null) {
+        this.store.dispatch(new UI.StartLoading());
+        this.db.collection(path, ref => ref.where('userID', '==', data.userID))
+            .doc(data.id).delete().then(() => {
+            this.store.dispatch(new UI.StopLoading());
+            if (snackbarMessage) {
+                this.showSnackbar('Error, could not delete, please try again later', null, 3000);
+            }
+        }).catch(() => {
+            this.store.dispatch(new UI.StopLoading());
+            this.showSnackbar('Error, could not delete, please try again later', null, 3000);
+        });
+    }
 }
