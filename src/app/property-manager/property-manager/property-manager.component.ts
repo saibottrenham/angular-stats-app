@@ -28,20 +28,21 @@ export class PropertyManagerComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading$ = this.store.select(fromRoot.getIsLoading);
     this.propertyManagers$ = this.store.select(fromPropertyManager.getPropertyManagers);
-    this.propertyManagers$.subscribe( data => {
-      console.log(data);
-    });
     this.propertyManagerService.fetchPropertyManager();
   }
 
   addManager() {
     const dialogRef = this.dialog.open(AddPropertyManagerComponent, {
-      data: {
-        frank: 'hello'
-      },
       width: '600px',
     });
-    dialogRef.afterClosed().subscribe();
+  }
+
+  editManager() {
+    console.log('not yet implemented');
+  }
+
+  deleteManager() {
+    console.log('not yet implemented');
   }
 
 }

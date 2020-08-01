@@ -54,3 +54,7 @@ body {
     margin-left: 1em;
   }
 }
+
+p, mat-card-title, mat-card-subtitle {
+  word-break: break-all;
+}

@@ -1,11 +1,14 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="addManager">
     <mat-card>
         <mat-card-title fxLayoutAlign="center">Add Property Manager</mat-card-title>
-        <mat-card-content fxLayoutGap="10px" fxLayout="row" fxLayout.lt-sm="column">
-            <section fxFlex="100" fxFlex.lt-sm="50">
-                <app-image-upload (urlEmitter)="onUploadFinished($event)"></app-image-upload>
+        <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
+            <section fxFlex="100" fxFlex.lt-sm="33" class="image-container">
+                <app-image-upload
+                        (urlEmitter)="onUploadFinished($event)"
+                        [path]="propertyManagerPath"
+                ></app-image-upload>
             </section>
-            <section fxFlex="100" fxFlex.lt-sm="50" fxLayoutAlign="center" fxLayout="column">
+            <section fxFlex="100" fxFlex.lt-sm="66" fxLayoutAlign="center" fxLayout="column">
                 <mat-form-field appearance="standard">
                     <mat-label>Name</mat-label>
                     <input matInput formControlName="name" placeholder="Name" required>
@@ -25,6 +28,7 @@
             </section>
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">
+            <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
             <button type="submit" mat-raised-button [disabled]="addManager.invalid" color="primary">Add</button>
         </mat-card-actions>
     </mat-card>

@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropertyManager } from '../../property-manager.model';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { PropertyManagerService } from '../../property-manager.service';
 
 @Component({
@@ -14,9 +13,10 @@ export class AddPropertyManagerComponent implements OnInit {
     addManager: FormGroup;
     imageUrl: string;
     manager: PropertyManager;
+    propertyManagerPath = 'PropertyManager';
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: any,
+        // @Inject(MAT_DIALOG_DATA) public data: any,
         private propertyManagerService: PropertyManagerService) {
     }
 
@@ -35,7 +35,6 @@ export class AddPropertyManagerComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log('hello');
         this.manager = this.addManager.value;
         this.manager.imageUrl = this.imageUrl ? this.imageUrl : null;
         this.propertyManagerService.addPropertyManager(this.manager);

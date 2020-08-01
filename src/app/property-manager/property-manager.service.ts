@@ -45,6 +45,7 @@ export class PropertyManagerService {
               name: doc.payload.doc.data()['name'],
               mobile: doc.payload.doc.data()['mobile'],
               email: doc.payload.doc.data()['email'],
+              address: doc.payload.doc.data()['address'],
               imageUrl: doc.payload.doc.data()['imageUrl']
             };
           });
@@ -61,7 +62,7 @@ export class PropertyManagerService {
 
   addPropertyManager(e: PropertyManager) {
     e.userID = localStorage.getItem('userId');
-    this.uiService.addToDB(e, this.propertyManagersPath);
+    this.uiService.addToDB(e, this.propertyManagersPath, 'Added Property Manager Successfully');
   }
 
   cancelSubscriptions() {

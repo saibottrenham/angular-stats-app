@@ -28,10 +28,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
     @Input() file: File;
     // Specify which kind of image you want to upload, e.g. 'image/jpeg'
     @Input() accept = 'image/*';
-    // Max Size in bytes
-    @Input() maxSize = null;
-    // Image Dimensions which are be used to set a min height and width
-    @Input() minDimension: Dimensions | number = null;
+    // BucketPath
+    @Input() path = 'Images';
 
     @Output() urlEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -98,21 +96,13 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
         // Cancel previous uploads before starting a new one
         this.cancelUploads();
 
-        // Check max-size
-        // Note that we are not using [ngf][maxSize] when passing a file externally, as it would
-        // hide the error message. Hence we validate the file size here.
-        if (this.maxSize && file.size > this.maxSize) {
-            this.clearFile(true);
-            return;
-        }
-
         // Start upload
         this.progressValue = null;
         // Store the Subscription as http emitter for callbacks
         const date = Date.now();
-        const filePath = `RoomsImages/${date}`;
+        const filePath = `${this.path}/${date}`;
         const fileRef = this.storage.ref(filePath);
-        const task = this.storage.upload(`RoomsImages/${date}`, file);
+        const task = this.storage.upload(`${this.path}/${date}`, file);
         this.progressValue = 0;
         task
             .snapshotChanges()

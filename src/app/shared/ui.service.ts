@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import * as UI from './ui.actions';
 import * as fromUI from './ui.reducer';
 import { Store } from '@ngrx/store';
@@ -12,6 +12,7 @@ export class UiService {
   private days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
   constructor(
+      private dialogRef: MatDialog,
       private snackBar: MatSnackBar,
       private db: AngularFirestore,
       private afAuth: AngularFireAuth,
@@ -34,11 +35,12 @@ export class UiService {
     return index > 0 ? this.days[index] : this.days[todayIndex];
   }
 
-  addToDB(data: any, path: string) {
+  addToDB(data: any, path: string, snackbarMessage: string = null, closeAllDialoge: boolean = true) {
     this.store.dispatch(new UI.StartLoading());
-    this.db.collection(path)
-        .add(data).then(() => {
+    this.db.collection(path).add(data).then(() => {
       this.store.dispatch(new UI.StopLoading());
+      if (snackbarMessage) { this.showSnackbar(snackbarMessage, null, 3000); }
+      if (closeAllDialoge) { this.dialogRef.closeAll(); }
     }).catch(() => {
       this.store.dispatch(new UI.StopLoading());
       this.showSnackbar('Something Went wrong, can\'t save table', null, 3000);

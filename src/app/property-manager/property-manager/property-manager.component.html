@@ -1,8 +1,38 @@
-<section class="base-section">
-    <mat-card fxFlex fxFlexAlign="center">
-        <button mat-fab color="primary" aria-label="Add Another PropertyManager" (click)="addManager()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </mat-card>
+<section class="base-section" fxLayout="row" fxLayoutAlign="center" *ngIf="(isLoading$ | async)">
+    <mat-spinner diameter="50"></mat-spinner>
 </section>
+<div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let manager of propertyManagers$ | async">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{manager.name}}</mat-card-title>
+                <mat-card-subtitle>{{manager.email}}</mat-card-subtitle>
+            </mat-card-header>
+            <div class="image-container" fxLayoutAlign="center">
+                <img [src]="manager.imageUrl" alt="{{ manager.name }}">
+            </div>
+            <mat-card-content>
+                <p>Name: {{ manager.name }}</p>
+                <p>Mobile: {{ manager.mobile }} </p>
+                <p>Email: {{ manager.email }}</p>
+                <p>Address: {{ manager.address }}</p>
+            </mat-card-content>
+            <mat-card-actions align="right">
+                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deleteManager()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
+        <mat-card fxLayoutAlign="center">
+            <button mat-fab color="primary" aria-label="Add Another PropertyManager" (click)="addManager()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-card>
+    </div>
+</div>
 

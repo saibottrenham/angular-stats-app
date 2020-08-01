@@ -3,7 +3,6 @@
         ngfDrop
         selectable="1"
         [accept]="accept"
-        [maxSize]="maxSize"
         [file]="file"
         (fileChange)="onFileChange($event)"
         (lastInvalidsChange)="$event?.length && onInvalidFile()"
@@ -12,7 +11,7 @@
         [class.drag-valid]="isDragValid"
         [(validDrag)]="isDragValid"
 >
-    <img *ngIf="file" #img [ngfSrc]="file" class="img-preview" [class.in-progress]="progressValue < 100">
+    <img *ngIf="file" [ngfSrc]="file" class="img-preview" [class.in-progress]="progressValue < 100">
     <mat-icon class="placeholder-icon">add_a_photo</mat-icon>
     <mat-progress-spinner
             color="primary"
