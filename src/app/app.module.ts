@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AngularFireModule } from 'angularfire2';
+import { AngularFireModule } from '@angular/fire';
 
 
 import { AppComponent } from './app.component';
@@ -17,7 +17,7 @@ import { TrainingService } from './training/training.service';
 import { environment } from '../environments/environment';
 import { UiService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.reducer';

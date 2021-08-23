@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddPropertyManagerComponent } from './add-property-manager/add-property-manager.component';
 import { PropertyManagerService } from '../property-manager.service';
 import * as fromRoot from '../../app.reducer';
 import * as fromPropertyManager from '../property-manager.reducer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PropertyManager } from '../property-manager.model';
 import { Store } from '@ngrx/store';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-property-manager',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthData } from './auth-data.model';
 import { UiService } from '../shared/ui.service';
 import { Store } from '@ngrx/store';
@@ -36,7 +36,7 @@ export class AuthService {
 
   registerUser(authData: AuthData) {
     this.store.dispatch(new UI.StartLoading());
-    this.afAuth.auth.createUserWithEmailAndPassword(
+    this.afAuth.createUserWithEmailAndPassword(
       authData.email, authData.password
     ).then(result => {
       this.store.dispatch(new UI.StopLoading());
@@ -48,7 +48,7 @@ export class AuthService {
 
   login(authData: AuthData) {
     this.store.dispatch(new UI.StartLoading());
-    this.afAuth.auth.signInWithEmailAndPassword(
+    this.afAuth.signInWithEmailAndPassword(
       authData.email, authData.password
     ).then(result => {
       this.store.dispatch(new UI.StopLoading());
@@ -60,6 +60,6 @@ export class AuthService {
 
   logout() {
     localStorage.setItem('userId', '');
-    this.afAuth.auth.signOut();
+    this.afAuth.signOut();
   }
 }

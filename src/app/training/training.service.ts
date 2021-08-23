@@ -1,12 +1,11 @@
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import { Subscription } from 'rxjs/subscription';
+import { map } from 'rxjs/operators';
+import { Subscription, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { Exercise, WeekPlan } from './exercise.model';
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { UiService } from '../shared/ui.service';
 import * as Training from './training.actions';
 import * as fromTraining from './training.reducer';
@@ -43,9 +42,9 @@ export class TrainingService {
     this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
       .collection('availableExercises', ref => ref.where('userID', '==', this.userID))
-      .snapshotChanges()
-      .map(docArray => {
-        return docArray.map(doc => {
+      .snapshotChanges().pipe(
+      map(docArray  => {
+        return docArray.map((doc: any) => {
           return {
             id: doc.payload.doc.id,
             name: doc.payload.doc.data()['name'],
@@ -56,7 +55,7 @@ export class TrainingService {
           };
         });
       })
-      .subscribe((exercises: Exercise[]) => {
+      ).subscribe((exercises: Exercise[]) => {
         this.store.dispatch(new UI.StopLoading());
         this.store.dispatch(new Training.SetAvailableTrainings(exercises));
       }, error => {
@@ -69,15 +68,16 @@ export class TrainingService {
     this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
       .collection('week_plan', ref => ref.where('userID', '==', this.userID))
-      .snapshotChanges()
-      .map(docArray => {
-        return docArray.map(doc => {
-          return {
-            id: doc.payload.doc.id,
-            week: JSON.parse(doc.payload.doc.data()['week']),
-          };
-        });
-      })
+      .snapshotChanges().pipe(
+        map(docArray => {
+          return docArray.map((doc: any) => {
+            return {
+              id: doc.payload.doc.id,
+              week: JSON.parse(doc.payload.doc.data()['week']),
+            };
+          });
+        })
+      )
       .subscribe((week_plan: any) => {
         if (week_plan.length === 0) {
           this.store.dispatch(new Training.SetWeekPlan(this.week_plan));

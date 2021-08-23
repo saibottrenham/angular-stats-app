@@ -1,6 +1,6 @@
 export interface PropertyManager {
     id: string;
-    userID?: string;
+    userId?: string;
     name: string;
     mobile: string;
     email: string;

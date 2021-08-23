@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropertyManager } from '../../property-manager.model';
 import { PropertyManagerService } from '../../property-manager.service';
@@ -16,7 +16,7 @@ export class AddPropertyManagerComponent implements OnInit {
     propertyManagerPath = 'PropertyManager';
 
     constructor(
-        // @Inject(MAT_DIALOG_DATA) public data: any,
+        @Inject(MAT_DIALOG_DATA) public data: any,
         private propertyManagerService: PropertyManagerService) {
     }
 
