@@ -33,7 +33,6 @@ export class PropertyManagerService {
       this.uiService.showSnackbar('No User Id present, did not query Property Managers', null, 3000);
       return;
     }
-    console.log(this.propertyManagersPath);
     this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
         .collection(this.propertyManagersPath, ref => ref.where('userId', '==', this.userID))
@@ -69,6 +68,10 @@ export class PropertyManagerService {
   addPropertyManager(e: PropertyManager) {
     e.userId = localStorage.getItem('userId');
     this.uiService.addToDB(e, this.propertyManagersPath, 'Added Property Manager Successfully');
+  }
+
+  editPropertyManager(e: PropertyManager) {
+    this.uiService.updateToDB(e, this.propertyManagersPath, localStorage.getItem('userId'), 'Edited Property Manager Successfully');
   }
 
   deletePropertyManager(e: PropertyManager) {

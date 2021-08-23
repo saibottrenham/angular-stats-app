@@ -30,6 +30,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
     // BucketPath
     @Input() path = 'Images';
 
+    @Input() alreadyPresentUrl: string;
+
     @Output() urlEmitter: EventEmitter<string> = new EventEmitter<string>();
 
     public isDragValid: boolean;
@@ -97,6 +99,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
 
         // Start upload
         this.progressValue = null;
+        this.alreadyPresentUrl = null;
         // Store the Subscription as http emitter for callbacks
         const date = Date.now();
         const filePath = `${this.path}/${date}`;

@@ -46,11 +46,14 @@ export class UiService {
     }).finally(() => this.store.dispatch(new UI.StopLoading()));
   }
 
-  updateToDB(data: any, path: string, id: string = null) {
+  updateToDB(data: any, path: string, id: string = null, snackbarMessage: string = null) {
     this.store.dispatch(new UI.StartLoading());
     this.db.collection(path, ref => ref.where('userId', '==', this.userID))
         .doc(id !== null ? id : data.id).update(data).then(() => {
       this.store.dispatch(new UI.StopLoading());
+        if (snackbarMessage) {
+          this.showSnackbar(snackbarMessage, null, 3000);
+      }
     }).catch(() => {
       this.store.dispatch(new UI.StopLoading());
       this.showSnackbar('Something Went wrong, can\'t update table', null, 3000);
@@ -63,7 +66,7 @@ export class UiService {
             .doc(data.id).delete().then(() => {
             this.store.dispatch(new UI.StopLoading());
             if (snackbarMessage) {
-                this.showSnackbar('Deleted Succesfully', null, 3000);
+                this.showSnackbar(snackbarMessage, null, 3000);
             }
         }).catch(() => {
             this.store.dispatch(new UI.StopLoading());

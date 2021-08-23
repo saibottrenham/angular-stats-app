@@ -16,17 +16,17 @@ export class AddPropertyManagerComponent implements OnInit {
     propertyManagerPath = 'PropertyManager';
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: any,
+        @Inject(MAT_DIALOG_DATA) public data: PropertyManager,
         private propertyManagerService: PropertyManagerService) {
     }
 
     ngOnInit(): void {
         this.addManager = new FormGroup({
-            name: new FormControl('', {validators: [Validators.required]}),
-            mobile: new FormControl('', { validators: [Validators.required] }),
-            email: new FormControl('', { validators: [Validators.required] }),
-            address: new FormControl('', { validators: [Validators.required] }),
-            imageUrl: new FormControl(''),
+            name: new FormControl(this.data?.name, {validators: [Validators.required]}),
+            mobile: new FormControl(this.data?.mobile, { validators: [Validators.required] }),
+            email: new FormControl(this.data?.email, { validators: [Validators.required] }),
+            address: new FormControl(this.data?.address, { validators: [Validators.required] }),
+            imageUrl: new FormControl(this.data?.imageUrl),
         });
     }
 
@@ -37,6 +37,10 @@ export class AddPropertyManagerComponent implements OnInit {
     onSubmit() {
         this.manager = this.addManager.value;
         this.manager.imageUrl = this.imageUrl ? this.imageUrl : null;
-        this.propertyManagerService.addPropertyManager(this.manager);
+        if (this.data.id) {
+            this.propertyManagerService.editPropertyManager(this.manager);
+        } else {
+            this.propertyManagerService.addPropertyManager(this.manager);
+        }
     }
 }

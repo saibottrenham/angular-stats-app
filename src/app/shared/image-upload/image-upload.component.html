@@ -12,6 +12,7 @@
         [(validDrag)]="isDragValid"
 >
     <img *ngIf="file" [ngfSrc]="file" class="img-preview" [class.in-progress]="progressValue < 100">
+    <img *ngIf="alreadyPresentUrl" [src]="alreadyPresentUrl" class="img-preview">
     <mat-icon class="placeholder-icon">add_a_photo</mat-icon>
     <mat-progress-spinner
             color="primary"

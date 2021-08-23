@@ -37,8 +37,11 @@ export class PropertyManagerComponent implements OnInit {
     });
   }
 
-  editManager() {
-    console.log('not yet implemented');
+  editManager(e: PropertyManager) {
+    this.dialog.open(AddPropertyManagerComponent, {
+      width: '600px',
+      data: e
+    });
   }
 
   deleteManager(e: PropertyManager) {

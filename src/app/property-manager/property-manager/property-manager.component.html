@@ -12,7 +12,7 @@
                 <img [src]="manager.imageUrl" alt="{{ manager.name }}">
             </div>
             <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager()">
+                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager(manager)">
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deleteManager(manager)">
