@@ -13,7 +13,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { AuthService } from './auth/auth.service';
-import { TrainingService } from './training/training.service';
 import { environment } from '../environments/environment';
 import { UiService } from './shared/ui.service';
 import { AuthModule } from './auth/auth.module';
@@ -45,7 +44,7 @@ import { PropertyManagerService } from './property-manager/property-manager.serv
     StoreModule.forRoot(reducers),
     AuthModule
   ],
-  providers: [AuthService, TrainingService, UiService, PropertyManagerService],
+  providers: [AuthService, UiService, PropertyManagerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
