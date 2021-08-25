@@ -2,16 +2,16 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AddHouseComponent } from '../add-house/add-house.component';
+import { AddPropertyComponent } from '../add-property/add-property.component';
 import * as fromUI from '../../shared/ui.reducer';
 import * as fromRoot from '../../app.reducer';
 
 @Component({
-  selector: 'app-house',
-  templateUrl: './house.component.html',
-  styleUrls: ['./house.component.scss']
+  selector: 'app-property',
+  templateUrl: './property.component.html',
+  styleUrls: ['./property.component.scss']
 })
-export class HouseComponent implements OnInit {
+export class PropertyComponent implements OnInit {
   isLoading$: Observable<boolean>;
 
   constructor(
@@ -24,7 +24,7 @@ export class HouseComponent implements OnInit {
   }
 
   addHouse() {
-    const dialogRef = this.dialog.open(AddHouseComponent, {
+    const dialogRef = this.dialog.open(AddPropertyComponent, {
       data: {
         frank: 'hello'
       },
