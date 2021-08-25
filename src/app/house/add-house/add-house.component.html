@@ -1,1 +1,98 @@
-{{data.frank}}
+<form (ngSubmit)="onSubmit()" [formGroup]="houseForm">
+  <mat-card>
+      <mat-card-title fxLayoutAlign="center">Add House</mat-card-title>
+      <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
+          <section fxFlex="100%" fxFlex.gt-sm="33%" class="image-container">
+              <app-image-upload
+                      (urlEmitter)="onUploadFinished($event)"
+                      [path]="housePath"
+                      [alreadyPresentUrl]="data?.imageUrl"
+              ></app-image-upload>
+          </section>
+          <section fxFlex="100%" fxFlex.gt-sm="66%"  fxLayoutAlign="center" fxLayout="column">
+            <h4>House Details: </h4>
+            <mat-form-field appearance="standard">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Name" required>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" placeholder="Address" required>
+            </mat-form-field>
+            <h4>Rooms: </h4>
+            <div formArrayName="rooms" *ngFor="let skill of rooms.controls; let i=index">
+              <div [formGroupName]="i" class="room-details">
+                <button 
+                  type="button" mat-icon-button aria-label="Remove house button" 
+                  color="primary" class="remove-button"
+                  (click)="removeRoom(i)"
+                  >
+                  <mat-icon>close</mat-icon>
+                </button>
+                <p>Room {{i + 1}} </p>
+                <mat-form-field appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input matInput formControlName="price" placeholder="Price" required>
+                </mat-form-field>
+                <mat-checkbox formControlName="rentedOut" labelPosition="before">Rented out?</mat-checkbox>
+              </div>
+            </div>
+            <button mat-raised-button type="button" (click)="addRoom()">Add Room</button>
+              <!-- <mat-form-field appearance="standard">
+                  <mat-label>Name</mat-label>
+                  <input matInput formControlName="name" placeholder="Name" required>
+              </mat-form-field>
+              <mat-form-field appearance="standard">
+                  <mat-label>Mobile</mat-label>
+                  <input matInput formControlName="mobile" placeholder="Mobile" required>
+              </mat-form-field>
+              <mat-form-field appearance="standard">
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="email" placeholder="Email" required>
+              </mat-form-field>
+              <mat-form-field appearance="standard">
+                  <mat-label>Address</mat-label>
+                  <input matInput formControlName="address" placeholder="Address" required>
+              </mat-form-field> -->
+          </section>
+      </mat-card-content>
+      <mat-card-actions fxLayoutAlign="center">
+          <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
+          <button type="submit" mat-raised-button [disabled]="houseForm.invalid" [mat-dialog-close]="true" color="primary">
+              {{data?.id ? 'Update' : 'Add' }}
+          </button>
+      </mat-card-actions>
+  </mat-card>
+</form>
+
+<!-- <p>
+  <label for="name">Name </label>
+  <input type="text" id="name" name="name" formControlName="name">
+</p>
+
+
+Skills:
+<div formArrayName="skills">
+  <div *ngFor="let skill of skills.controls; let i=index">
+    <div [formGroupName]="i">
+      {{i}}
+      skill name :
+      <input type="text" formControlName="skill">
+      exp:
+      <input type="text" formControlName="exp">
+
+      <button (click)="removeSkill(i)">Remove</button>
+    </div>
+  </div>
+</div>
+
+<p>
+  <button type="submit">Submit</button>
+</p>
+
+</form>
+
+
+<p>
+<button type="button" (click)="addSkills()">Add</button>
+</p> -->

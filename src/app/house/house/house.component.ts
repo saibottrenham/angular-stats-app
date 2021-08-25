@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AddHouseComponent } from '../add-house/add-house.component';
+import * as fromUI from '../../shared/ui.reducer';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-house',
@@ -14,11 +16,11 @@ export class HouseComponent implements OnInit {
 
   constructor(
       private dialog: MatDialog,
-      // private store: Store<fromTraining.State>,
+      private uiStore: Store<fromUI.State>,
   ) { }
 
   ngOnInit(): void {
-    // this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
   }
 
   addHouse() {
@@ -26,7 +28,7 @@ export class HouseComponent implements OnInit {
       data: {
         frank: 'hello'
       },
-      width: '600px',
+      width: '80vw',
     });
     dialogRef.afterClosed().subscribe();
   }

@@ -21,6 +21,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.reducer';
 import { PropertyManagerService } from './property-manager/property-manager.service';
+import { HouseService } from './house/house.service';
 
 
 @NgModule({
@@ -44,7 +45,7 @@ import { PropertyManagerService } from './property-manager/property-manager.serv
     StoreModule.forRoot(reducers),
     AuthModule
   ],
-  providers: [AuthService, UiService, PropertyManagerService],
+  providers: [AuthService, UiService, PropertyManagerService, HouseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

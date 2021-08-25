@@ -4,6 +4,7 @@ import { AddPropertyManagerComponent } from './add-property-manager/add-property
 import { PropertyManagerService } from '../property-manager.service';
 import * as fromRoot from '../../app.reducer';
 import * as fromPropertyManager from '../property-manager.reducer';
+import * as fromUI from '../../shared/ui.reducer';
 import { Observable } from 'rxjs';
 import { PropertyManager } from '../property-manager.model';
 import { Store } from '@ngrx/store';
@@ -23,10 +24,11 @@ export class PropertyManagerComponent implements OnInit {
       private afAuth: AngularFireAuth,
       private propertyManagerService: PropertyManagerService,
       private store: Store<fromPropertyManager.State>,
+      private uiStore: Store<fromUI.State>
   ) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
     this.propertyManagers$ = this.store.select(fromPropertyManager.getPropertyManagers);
     this.propertyManagerService.fetchPropertyManager();
   }

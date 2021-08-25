@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
-import * as UI from '../shared/ui.actions';
-import * as fromUI from '../shared/ui.reducer';
-import { UiService } from '../shared/ui.service';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Store } from '@ngrx/store';
-import * as fromPropertyManager from './property-manager.reducer';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { map, Subscription } from 'rxjs';
-import { PropertyManager } from './property-manager.model';
-import * as PropertyManagerActions from './property-manager.actions';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
+import { UiService } from '../shared/ui.service';
+import { Store } from '@ngrx/store';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class PropertyManagerService {
+@Injectable()
+export class HouseService {
 
   private userID: string = null;
   private fbSubs: Subscription[] = [];
@@ -23,17 +16,17 @@ export class PropertyManagerService {
       private db: AngularFirestore,
       private uiService: UiService,
       private afAuth: AngularFireAuth,
-      private store: Store<fromPropertyManager.State>,
-      private uiStore: Store<fromUI.State>) {
+      private store: Store<fromPropertyManager.State>
+      ) {
   }
 
-  fetchPropertyManager() {
+  fetchHouse() {
     this.userID = localStorage.getItem('userId');
     if (!this.userID) {
       this.uiService.showSnackbar('No User Id present, did not query Property Managers', null, 3000);
       return;
     }
-    this.uiStore.dispatch(new UI.StartLoading());
+    this.store.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
         .collection(this.propertyManagersPath, ref => ref.where('userId', '==', this.userID))
         .snapshotChanges().pipe(
@@ -52,12 +45,12 @@ export class PropertyManagerService {
           })
         ).subscribe({
           next: (managers: PropertyManager[]) => {
-            this.uiStore.dispatch(new UI.StopLoading());
+            this.store.dispatch(new UI.StopLoading());
             this.store.dispatch(new PropertyManagerActions.SetPropertyManager(managers));
           },
           error: (e) => {
             console.log(e);
-            this.uiStore.dispatch(new UI.StopLoading());
+            this.store.dispatch(new UI.StopLoading());
             this.uiService.showSnackbar('Fetching Managers failed, please try again later', null, 3000);
           }
       })

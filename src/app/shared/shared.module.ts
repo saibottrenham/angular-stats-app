@@ -4,15 +4,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ngfModule } from 'angular-file';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
+
 
 @NgModule({
+  declarations: [
+    ImageUploadComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
-    ngfModule
+    ngfModule,
   ],
   exports: [
     CommonModule,
@@ -20,7 +25,8 @@ import { ngfModule } from 'angular-file';
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
-    ngfModule
+    ngfModule,
+    ImageUploadComponent
   ]
 })
 export class SharedModule {}

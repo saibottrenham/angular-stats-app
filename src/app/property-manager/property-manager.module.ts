@@ -3,7 +3,6 @@ import { PropertyManagerComponent } from './property-manager/property-manager.co
 import { SharedModule } from '../shared/shared.module';
 import { PropertyManagerRoutingModule } from './property-manager-routing.module';
 import { AddPropertyManagerComponent } from './property-manager/add-property-manager/add-property-manager.component';
-import { ImageUploadComponent } from '../shared/image-upload/image-upload.component';
 import { StoreModule } from '@ngrx/store';
 import { propertyManagerReducer } from './property-manager.reducer';
 
@@ -11,8 +10,7 @@ import { propertyManagerReducer } from './property-manager.reducer';
 @NgModule({
   declarations: [
       PropertyManagerComponent,
-      AddPropertyManagerComponent,
-      ImageUploadComponent
+      AddPropertyManagerComponent
   ],
   imports: [
     SharedModule,

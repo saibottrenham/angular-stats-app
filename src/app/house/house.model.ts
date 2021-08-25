@@ -4,16 +4,15 @@ import { PropertyManager } from '../property-manager/property-manager.model';
 
 export interface House {
     id: string;
-    userID?: string;
+    userId?: string;
     name: string;
     address: string;
     rooms: [Room];
-    roommates: [Roommate];
     costs: [Cost];
     notes: string;
-    monthlyReturn: number;
     imageUrl: string;
-    date?: Date;
+    created?: Date;
+    lastUpdated?: Date;
 }
 
 export interface Room {
@@ -21,7 +20,8 @@ export interface Room {
     userID?: string;
     imageUrl: string;
     price: number;
+    lastUpdated: Date;
     rentedOut: boolean;
-    rentedOutBy?: PropertyManager;
-    roommate?: Roommate;
+    rentedOutBy?: [PropertyManager];
+    roommate?: [Roommate];
 }

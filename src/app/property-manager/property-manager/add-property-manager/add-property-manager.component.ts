@@ -10,7 +10,7 @@ import { PropertyManagerService } from '../../property-manager.service';
     styleUrls: ['add-property-manager.component.scss']
 })
 export class AddPropertyManagerComponent implements OnInit {
-    addManager: FormGroup;
+    managerForm: FormGroup;
     imageUrl: string;
     manager: PropertyManager;
     propertyManagerPath = 'PropertyManager';
@@ -21,7 +21,7 @@ export class AddPropertyManagerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.addManager = new FormGroup({
+        this.managerForm = new FormGroup({
             name: new FormControl(this.data?.name, {validators: [Validators.required]}),
             mobile: new FormControl(this.data?.mobile, { validators: [Validators.required] }),
             email: new FormControl(this.data?.email, { validators: [Validators.required] }),
@@ -35,12 +35,15 @@ export class AddPropertyManagerComponent implements OnInit {
     }
 
     onSubmit() {
-        this.manager = this.addManager.value;
-        this.manager.imageUrl = this.imageUrl ? this.imageUrl : null;
-        if (this.data.id) {
-            this.propertyManagerService.editPropertyManager(this.manager);
+        const manager = this.managerForm.value;
+        manager.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
+        // Edit Steps
+        if (this.data?.id) {
+            this.propertyManagerService.editPropertyManager(
+                {...manager, id: this.data.id, userId: this.data.userId}
+            );
         } else {
-            this.propertyManagerService.addPropertyManager(this.manager);
+            this.propertyManagerService.addPropertyManager(manager);
         }
     }
 }

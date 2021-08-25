@@ -46,10 +46,10 @@ export class UiService {
     }).finally(() => this.store.dispatch(new UI.StopLoading()));
   }
 
-  updateToDB(data: any, path: string, id: string = null, snackbarMessage: string = null) {
+  updateToDB(data: any, path: string, snackbarMessage: string = null) {
     this.store.dispatch(new UI.StartLoading());
-    this.db.collection(path, ref => ref.where('userId', '==', this.userID))
-        .doc(id !== null ? id : data.id).update(data).then(() => {
+    this.db.collection(path, ref => ref.where('userId', '==', data.userId))
+        .doc(data.id).update(data).then(() => {
       this.store.dispatch(new UI.StopLoading());
         if (snackbarMessage) {
           this.showSnackbar(snackbarMessage, null, 3000);

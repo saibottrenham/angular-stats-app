@@ -1,7 +1,31 @@
-<section class="base-section">
-    <mat-card fxFlex fxFlexAlign="center">
-        <button mat-fab color="primary" aria-label="Add Another House" (click)="addHouse()">
-            <mat-icon>add</mat-icon>
-        </button>
-    </mat-card>
+<section class="base-section" fxLayout="row" fxLayoutAlign="center center" *ngIf="(isLoading$ | async)">
+    <mat-spinner diameter="50"></mat-spinner>
 </section>
+<div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let house of houses$ | async">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{house.name}}</mat-card-title>
+                <mat-card-subtitle>{{house.address}}</mat-card-subtitle>
+            </mat-card-header>
+            <div class="image-container" fxLayoutAlign="center" *ngIf="house.imageUrl">
+                <img [src]="house.imageUrl" alt="{{ house.name }}">
+            </div>
+            <mat-card-actions align="right">
+                <button mat-mini-fab color="" aria-label="Edit a House" (click)="editHouse(house)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-mini-fab color="warn" aria-label="Delete a House" (click)="deleteHouse(house)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
+        <mat-card fxLayoutAlign="center">
+            <button mat-fab color="primary" aria-label="Add Another House" (click)="addHouse()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-card>
+    </div>
+</div>
