@@ -38,8 +38,8 @@ export class AddHouseComponent implements OnInit {
       return this.fb.group({
         price: new FormControl(data ? data.price : '', {validators: [Validators.required]}),
         rentedOut: new FormControl(data ? data.rentedOut : '', {validators: [Validators.required]}),
-        // rentedOutBy: this.fb.array(data?.rentedOut ? data.rentedOut : []),
-        // roommate: this.fb.array(data?.roommate ? data.roommate : [])
+        rentedOutBy: this.fb.array(data?.rentedOut ? data.rentedOut : []),
+        tennant: this.fb.array(data?.roommate ? data.roommate : [])
       })
     }
    

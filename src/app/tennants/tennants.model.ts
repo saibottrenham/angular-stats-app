@@ -1,4 +1,4 @@
-export interface Roommate {
+export interface Tennant {
     id: string;
     name: string;
     mobile: number;

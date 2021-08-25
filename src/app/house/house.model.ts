@@ -1,4 +1,4 @@
-import { Roommate } from '../roommates/roommates.model';
+import { Tennant } from '../tennants/tennants.model';
 import { Cost } from '../analytics/analytics.model';
 import { PropertyManager } from '../property-manager/property-manager.model';
 
@@ -23,5 +23,5 @@ export interface Room {
     lastUpdated: Date;
     rentedOut: boolean;
     rentedOutBy?: [PropertyManager];
-    roommate?: [Roommate];
+    tennant?: [Tennant];
 }
