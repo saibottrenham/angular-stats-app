@@ -11,21 +11,21 @@
     <mat-icon>house</mat-icon>
     <span class="nav-caption">Properties</span>
   </a>
-  <a mat-list-item routerLink="/roommates" (click)="onClose()" *ngIf="(isAuth$ | async)">
-    <mat-icon>fitness_center</mat-icon>
-    <span class="nav-caption">Roommates</span>
+  <a mat-list-item routerLink="/tennants" (click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>person</mat-icon>
+    <span class="nav-caption">Tennants</span>
   </a>
-  <a mat-list-item routerLink="/manager" (click)="onClose()" *ngIf="(isAuth$ | async)">
-    <mat-icon>fitness_center</mat-icon>
-    <span class="nav-caption">Property Manager</span>
+  <a mat-list-item routerLink="/propertyManagers" (click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>badge</mat-icon>
+    <span class="nav-caption">Property Managers</span>
   </a>
   <a mat-list-item routerLink="/analytics" (click)="onClose()" *ngIf="(isAuth$ | async)">
-    <mat-icon>fitness_center</mat-icon>
+    <mat-icon>show_chart</mat-icon>
     <span class="nav-caption">Analytics</span>
   </a>
   <mat-list-item>
     <button mat-icon-button (click)="onLogout()" *ngIf="(isAuth$ | async)">
-      <mat-icon>eject</mat-icon>
+      <mat-icon>logout</mat-icon>
       <span class="nav-caption">Logout</span>
     </button>
   </mat-list-item>

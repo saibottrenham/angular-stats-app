@@ -19,10 +19,10 @@
         <a routerLink="/properties">Properties</a>
       </li>
       <li *ngIf="isAuth$ | async">
-        <a routerLink="/tennant">Tennant</a>
+        <a routerLink="/tennants">Tennants</a>
       </li>
       <li *ngIf="isAuth$ | async">
-        <a [routerLink]="['/manager']">Property Manager</a>
+        <a routerLink="/propertyManagers">Property Managers</a>
       </li>
       <li *ngIf="isAuth$ | async">
         <a routerLink="/analytics">Analytics</a>
