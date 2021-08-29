@@ -1,7 +1,9 @@
 export interface Tennant {
     id: string;
+    userId?: string;
     name: string;
-    mobile: number;
+    mobile: string;
+    address: string;
     email: string;
     imageUrl: string;
 }

@@ -23,7 +23,7 @@ export class PropertyComponent implements OnInit {
     this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
   }
 
-  addHouse() {
+  addProperty() {
     const dialogRef = this.dialog.open(AddPropertyComponent, {
       data: {
         frank: 'hello'

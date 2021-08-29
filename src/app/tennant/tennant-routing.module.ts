@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TennantsComponent } from './tennants/tennants.component';
+import { TennantComponent } from './tennant/tennant.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: TennantsComponent}
+  { path: '', component: TennantComponent}
 ];
 
 @NgModule({
@@ -14,4 +14,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class TennantsRoutingModule { }
+export class TennantRoutingModule { }

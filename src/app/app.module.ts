@@ -22,6 +22,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.reducer';
 import { PropertyManagerService } from './property-manager/property-manager.service';
 import { PropertyService } from './property/property.service';
+import { TennantService } from './tennant/tennant.service';
 
 
 @NgModule({
@@ -45,7 +46,13 @@ import { PropertyService } from './property/property.service';
     StoreModule.forRoot(reducers),
     AuthModule
   ],
-  providers: [AuthService, UiService, PropertyManagerService, PropertyService],
+  providers: [
+    AuthService, 
+    UiService, 
+    PropertyManagerService, 
+    PropertyService,
+    TennantService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

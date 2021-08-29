@@ -3,6 +3,8 @@ import { PropertyComponent } from './property/property.component';
 import { SharedModule } from '../shared/shared.module';
 import { PropertyRoutingModule } from './property-routing.module';
 import { AddPropertyComponent } from './add-property/add-property.component';
+import { propertyReducer } from './property.reducer';
+import { StoreModule } from '@ngrx/store';
 
 
 
@@ -13,7 +15,8 @@ import { AddPropertyComponent } from './add-property/add-property.component';
   ],
   imports: [
     SharedModule,
-    PropertyRoutingModule
+    PropertyRoutingModule,
+    StoreModule.forFeature('property', propertyReducer)
   ],
   entryComponents: [AddPropertyComponent]
 })

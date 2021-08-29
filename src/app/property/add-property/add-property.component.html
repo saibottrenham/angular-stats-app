@@ -19,6 +19,70 @@
               <mat-label>Address</mat-label>
               <input matInput formControlName="address" placeholder="Address" required>
             </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Price</mat-label>
+              <input matInput formControlName="price" placeholder="Price" required>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Tennants</mat-label>
+              <mat-chip-list #tennantsList aria-label="Tenant selection">
+                <mat-chip
+                  *ngFor="let tennant of tennants"
+                  (removed)="remove(tennant, tennants, allTennants)"
+                  >
+                  {{tennant.name}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="Add a Tennant"
+                  #tennantInput
+                  [formControl]="tennantCtrl"
+                  [matAutocomplete]="tennant"
+                  [matChipInputFor]="tennantsList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  >
+              </mat-chip-list>
+              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="selected($event, allTennants, tennants)">
+                <mat-option *ngFor="let tennant of filteredTennants | async" [value]="tennant">
+                  {{tennant.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Property Managers</mat-label>
+              <mat-chip-list #propertyManagersList aria-label="Property Manager selection">
+                <mat-chip
+                  *ngFor="let propertyManager of propertyManagers"
+                  (removed)="remove(propertyManager, propertyManagers, allPropertyManagers)"
+                  >
+                  {{propertyManager.name}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="Add a Property Manager"
+                  #propertyManagerInput
+                  [formControl]="propertyManagerCtrl"
+                  [matAutocomplete]="propertyManagerAuto"
+                  [matChipInputFor]="propertyManagersList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  >
+              </mat-chip-list>
+              <mat-autocomplete #propertyManagerAuto="matAutocomplete" (optionSelected)="selected($event, allPropertyManagers, propertyManagers)">
+                <mat-option *ngFor="let propertyManager of filteredPropertyManagers | async" [value]="propertyManager">
+                  {{propertyManager.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Notes</mat-label>
+              <textarea matInput
+              formControlName="notes"
+              placeholder="Notes"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="4"
+              cdkAutosizeMaxRows="10"></textarea>
+            </mat-form-field>
+            <mat-checkbox formControlName="rentedOut">Rented Out?</mat-checkbox>
           </section>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">

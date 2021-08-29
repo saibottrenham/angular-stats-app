@@ -1,4 +1,4 @@
-import { Tennant } from '../tennants/tennants.model';
+import { Tennant } from '../tennant/tennant.model';
 import { PropertyManager } from '../property-manager/property-manager.model';
 
 export interface Property {

@@ -5,34 +5,34 @@ import { map, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UiService } from '../shared/ui.service';
 import { Store } from '@ngrx/store';
-import { Property } from './property.model';
-import * as fromProperty from './property.reducer';
-import * as PropertyActions from './property.actions';
+import { Tennant } from './tennant.model';
+import * as fromTennant from './tennant.reducer';
+import * as TennantActions from './tennant.actions';
 
 @Injectable()
-export class PropertyService {
+export class TennantService {
 
   private userId: string = null;
   private fbSubs: Subscription[] = [];
-  private propertyPath = 'properties';
+  private tennantPath = 'tennants';
 
   constructor(
       private db: AngularFirestore,
       private uiService: UiService,
-      private store: Store<fromProperty.State>,
+      private store: Store<fromTennant.State>,
       private uiStore: Store<fromUI.State>
       ) {
   }
 
-  fetchProperties() {
+  fetchTennants() {
     this.userId = localStorage.getItem('userId');
     if (!this.userId) {
-      this.uiService.showSnackbar('No User Id present, did not query Properties', null, 3000);
+      this.uiService.showSnackbar('No User Id present, did not query tennants', null, 3000);
       return;
     }
     this.uiStore.dispatch(new UI.StartLoading());
     this.fbSubs.push(this.db
-      .collection(this.propertyPath, ref => ref.where('userId', '==', this.userId))
+      .collection(this.tennantPath, ref => ref.where('userId', '==', this.userId))
       .snapshotChanges().pipe(
         map(docArray => {
           return docArray.map((doc: any) => {
@@ -40,23 +40,18 @@ export class PropertyService {
               id: doc.payload.doc.id,
               userId: doc.payload.doc.data()['userId'],
               name: doc.payload.doc.data()['name'],
-              price: doc.payload.doc.data()['price'],
+              mobile: doc.payload.doc.data()['mobile'],
+              email: doc.payload.doc.data()['email'],
               address: doc.payload.doc.data()['address'],
-              tennants: doc.payload.doc.data()['tennants'],
-              rentedOut: doc.payload.doc.data()['rentedOut'],
-              propertyManagers: doc.payload.doc.data()['propertyManagers'],
-              notes: doc.payload.doc.data()['notes'],
-              imageUrl: doc.payload.doc.data()['imageUrl'],
-              created:  doc.payload.doc.data()['created'],
-              lastUpdated: doc.payload.doc.data()['lastUpdated']
+              imageUrl: doc.payload.doc.data()['imageUrl']
             }
           })
         })
       )
       .subscribe({
-          next: (properties: Property[]) => {
+          next: (tennants: Tennant[]) => {
             this.uiStore.dispatch(new UI.StopLoading());
-            this.store.dispatch(new PropertyActions.SetProperty(properties));
+            this.store.dispatch(new TennantActions.SetTennant(tennants));
           },
           error: (e) => {
             console.log(e);
@@ -68,18 +63,18 @@ export class PropertyService {
   }
   
 
-  addProperty(e: Property) {
+  addTennant(e: Tennant) {
     e.userId = localStorage.getItem('userId');
-    this.uiService.addToDB(e, this.propertyPath, 'Added House Successfully');
+    this.uiService.addToDB(e, this.tennantPath, 'Added Tennant Successfully');
   }
 
-  editProperty(e: Property) {
-    this.uiService.updateToDB(e, this.propertyPath, 'Edited House Successfully');
+  editTennant(e: Tennant) {
+    this.uiService.updateToDB(e, this.tennantPath, 'Edited Tennant Successfully');
   }
 
-  deleteProperty(e: Property) {
+  deleteTennant(e: Tennant) {
     const newE = {...e, userId: localStorage.getItem('userId')};
-    this.uiService.deleteFromDB(newE, this.propertyPath, 'Deleted House Successfully');
+    this.uiService.deleteFromDB(newE, this.tennantPath, 'Deleted Tennant Successfully');
   }
 
   cancelSubscriptions() {

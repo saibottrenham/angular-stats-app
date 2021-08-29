@@ -2,20 +2,20 @@
     <mat-spinner diameter="50"></mat-spinner>
 </section>
 <div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
-    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let property of properties$ | async">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let tennant of tennants$ | async">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>{{property.name}}</mat-card-title>
-                <mat-card-subtitle>{{property.address}}</mat-card-subtitle>
+                <mat-card-title>{{tennant.name}}</mat-card-title>
+                <mat-card-subtitle>{{tennant.email}}</mat-card-subtitle>
             </mat-card-header>
-            <div class="image-container" fxLayoutAlign="center" *ngIf="property.imageUrl">
-                <img [src]="property.imageUrl" alt="{{ property.name }}">
+            <div class="image-container" fxLayoutAlign="center" *ngIf="tennant.imageUrl">
+                <img [src]="tennant.imageUrl" alt="{{ tennant.name }}">
             </div>
             <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Edit a House" (click)="editHouse(property)">
+                <button mat-mini-fab color="" aria-label="Add Another Tennant" (click)="editTennant(tennant)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-mini-fab color="warn" aria-label="Delete a House" (click)="deleteHouse(property)">
+                <button mat-mini-fab color="warn" aria-label="Add Another Tennant" (click)="deleteTennant(tennant)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-card-actions>
@@ -23,7 +23,7 @@
     </div>
     <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
         <mat-card fxLayoutAlign="center">
-            <button mat-fab color="primary" aria-label="Add Another Property" (click)="addProperty()">
+            <button mat-fab color="primary" aria-label="Add Another Tennant" (click)="addTennant()">
                 <mat-icon>add</mat-icon>
             </button>
         </mat-card>

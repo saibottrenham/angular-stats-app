@@ -25,7 +25,7 @@ export class AuthService {
       if (user) {
         localStorage.setItem('userId', user.uid);
         this.store.dispatch(new Auth.SetAuthenticated());
-        this.router.navigate(['/houses']);
+        this.router.navigate(['/properties']);
       } else {
         this.propertyManagerService.cancelSubscriptions();
         this.store.dispatch(new Auth.SetUnauthenticated());
