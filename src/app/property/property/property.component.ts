@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AddPropertyComponent } from '../add-property/add-property.component';
+import { AddPropertyComponent } from './add-property/add-property.component';
 import * as fromUI from '../../shared/ui.reducer';
 import * as fromRoot from '../../app.reducer';
 

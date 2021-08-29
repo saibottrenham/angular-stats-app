@@ -2,12 +2,12 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
-import { Property } from '../property.model';
-import { PropertyService } from '../property.service';
+import { Property } from '../../property.model';
+import { PropertyService } from '../../property.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Tennant } from '../../tennant/tennant.model';
-import { PropertyManager } from '../../property-manager/property-manager.model';
+import { Tennant } from '../../../tennant/tennant.model';
+import { PropertyManager } from '../../../property-manager/property-manager.model';
 
 @Component({
     selector: 'app-add-house',
