@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "esnext",
-    "outDir": "./dist/out-tsc",
+    "outDir": "./dist/stats-app",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

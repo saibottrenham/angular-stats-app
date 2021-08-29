@@ -1,27 +1,19 @@
-# FitnessTracker
+# Stats App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.4.
+This app is designed to help property managers to manage and maintain their properties. 
+the Goal of this app is to provide a end to end solution that will help to maintain a flexible, 
+easy to use and lightweight work environment that makes navigating between different plaforms a thing of 
+the past. 
 
-## Development server
+### Features include (and or will include): 
+    * Add properties, tennants and property managers. 
+    * Add reoccuring and one time cost.
+    * Review performance of individual properties, yearly earnings and profitability
+    * Export reports
+    * Realtime database and data entry updates
+    * Collaborative editing and adding of data
+    * Add Poperties to different Advertising channels with a click of a button
+    * import advertising channel communications, funneled inside one platform
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Current State WIP
+    * Add properties, tennants and property managers. 90% done
