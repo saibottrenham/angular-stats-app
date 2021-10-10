@@ -2,11 +2,10 @@
     <mat-spinner diameter="50"></mat-spinner>
 </section>
 <div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
-    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroup$ | async">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroups$ | async">
         <mat-card>
             <mat-card-header>
                 <mat-card-title>{{propertyGroup.name}}</mat-card-title>
-                <mat-card-subtitle>{{propertyGroup.address}}</mat-card-subtitle>
             </mat-card-header>
             <div class="image-container" fxLayoutAlign="center" *ngIf="propertyGroup.imageUrl">
                 <img [src]="propertyGroup.imageUrl" alt="{{ propertyGroup.name }}">

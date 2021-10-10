@@ -52,6 +52,8 @@ export class PropertyComponent implements OnInit {
     const dialogRef = this.dialog.open(AddPropertyComponent, {
       width: '600px',
       data: {
+        tennants: [],
+        propertyManagers: [],
         allTennants: this.tennants$,
         allPropertyManagers: this.propertyManagers$
       }

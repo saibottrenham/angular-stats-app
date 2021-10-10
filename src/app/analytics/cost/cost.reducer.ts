@@ -30,4 +30,4 @@ export function costReducer(state = initialState, action: CostActions) {
     }
 }
 export const getCostState = createFeatureSelector<CostState>('cost');
-export const getCosts = createSelector(getCostState,  (state: CostState) => state.costs);
+export const getCosts = createSelector(getCostState, (state: CostState) => state.costs);

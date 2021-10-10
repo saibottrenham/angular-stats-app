@@ -29,5 +29,5 @@ export function propertyGroupReducer(state = initialState, action: PropertyGroup
             return state;
     }
 }
-export const getPropertyGroupState = createFeatureSelector<PropertyGroupState>('propertyGoup');
+export const getPropertyGroupState = createFeatureSelector<PropertyGroupState>('propertyGroup');
 export const getPropertyGroups = createSelector(getPropertyGroupState,  (state: PropertyGroupState) => state.propertyGroups);

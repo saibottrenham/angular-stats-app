@@ -49,18 +49,18 @@ export class AddPropertyComponent implements OnInit {
         }
 
     ngOnInit(): void {
-        this.tennants = [...this.data?.tennants];
-        this.propertyManagers = [...this.data?.propertyManagers];
+        this.tennants = [...(this.data?.tennants || [])];
+        this.propertyManagers = [...(this.data?.propertyManagers || [])];
         this.data?.allPropertyManagers.subscribe(x => {
             this.allPropertyManagers = x.filter(propertyManager => {
-              return this.data?.propertyManagers.filter(propertyManager2 => {
+              return (this.data?.propertyManagers || []).filter((propertyManager2: PropertyManager)=> {
                 return propertyManager2.id == propertyManager.id;
               }).length == 0
           });
         });
         this.data?.allTennants.subscribe(x => {
             this.allTennants = x.filter(tennant => {
-              return this.data?.tennants.filter(tennant2 => {
+              return (this.data?.tennants || []).filter((tennant2: Tennant) => {
                 return tennant2.id == tennant.id;
               }).length == 0
           });

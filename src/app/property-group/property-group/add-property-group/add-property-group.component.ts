@@ -17,7 +17,7 @@ import { Cost } from '../../../analytics/cost/cost.model';
 export class AddPropertyGroupComponent implements OnInit {
     propertyGroupForm: FormGroup;
     imageUrl: string;
-    propertyPath = 'Property';
+    propertyGroupPath = 'PropertyGroup';
     selectable = true;
     removable = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -25,7 +25,6 @@ export class AddPropertyGroupComponent implements OnInit {
     costCtrl = new FormControl();
     filteredProperties: Observable<Property[]>;
     filteredCosts: Observable<Cost[]>;
-    propertyGroup: PropertyGroup[] = [];
     allProperties: Property[] = [];
     properties: Property[] = [];
     allCosts: Cost[] = [];
@@ -50,19 +49,19 @@ export class AddPropertyGroupComponent implements OnInit {
         }
 
     ngOnInit(): void {
-        this.properties = [...this.data?.properties];
-        this.costs = [...this.data?.costs];
+        this.properties = [...(this.data?.properties || [])];
+        this.costs = [...(this.data?.costs || [])];
         this.data?.allProperties.subscribe(x => {
             this.allProperties = x.filter(property => {
-              return this.data?.properties.filter(property2 => {
+              return (this.data?.properties || []).filter((property2: Property) => {
                 return property2.id == property.id;
               }).length == 0
           });
         });
         this.data?.allCosts.subscribe(x => {
           this.allCosts = x.filter(cost => {
-            return this.data?.costs.filter(cost2 => {
-              return cost2.id == cost.id;
+            return (this.data?.costs || []).filter((cost2: Cost) => {
+              return cost2?.id == cost.id;
             }).length == 0
         });
       });
@@ -124,7 +123,7 @@ export class AddPropertyGroupComponent implements OnInit {
     }
   
     selectCost(event: MatAutocompleteSelectedEvent): void {
-      this.properties.push(event.option.value);
+      this.costs.push(event.option.value);
       this.allCosts = this.allCosts.filter(item => {
         return this.costs.indexOf(item) === -1;
       });

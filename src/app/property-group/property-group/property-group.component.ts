@@ -5,11 +5,15 @@ import { Observable } from 'rxjs';
 import { AddPropertyGroupComponent } from './add-property-group/add-property-group.component';
 import * as fromUI from '../../shared/ui.reducer';
 import * as fromPropertyGroup from '../property-group.reducer';
+import * as fromProperty from '../../property/property.reducer';
+import * as fromCost from '../../analytics/cost/cost.reducer';
 import * as fromRoot from '../../app.reducer';
 import { PropertyGroupService } from '../property-group.service';
 import { PropertyGroup } from '../property-group.model';
 import { Cost } from '../../analytics/cost/cost.model';
 import { CostService } from '../../analytics/cost/cost.service';
+import { Property } from '../../property/property.model';
+import { PropertyService } from '../../property/property.service';
 
 @Component({
   selector: 'app-property',
@@ -18,6 +22,7 @@ import { CostService } from '../../analytics/cost/cost.service';
 })
 export class PropertyGroupComponent implements OnInit {
   propertyGroups$: Observable<PropertyGroup[]> = null;
+  properties$: Observable<Property[]> = null;
   costs$: Observable<Cost[]> = null;
   isLoading$: Observable<boolean>;
 
@@ -25,15 +30,21 @@ export class PropertyGroupComponent implements OnInit {
   constructor(
       private dialog: MatDialog,
       private propertyGroupService: PropertyGroupService,
+      private popertyService: PropertyService,
       private costService: CostService,
       private propertyGroupStore: Store<fromPropertyGroup.State>,
-      private uiStore: Store<fromUI.State>,
+      private propertyStore: Store<fromProperty.State>,
+      private costStore: Store<fromCost.State>,
+      private uiStore: Store<fromUI.State>
   ) { }
 
   ngOnInit(): void {
     this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
+    this.costs$ = this.costStore.select(fromCost.getCosts);
     this.propertyGroups$ = this.propertyGroupStore.select(fromPropertyGroup.getPropertyGroups);
+    this.properties$ = this.propertyStore.select(fromProperty.getProperties);
     this.costService.fetchCosts();
+    this.popertyService.fetchProperties();
     this.propertyGroupService.fetchPropertyGroups();
   }
 
@@ -41,7 +52,7 @@ export class PropertyGroupComponent implements OnInit {
     const dialogRef = this.dialog.open(AddPropertyGroupComponent, {
       width: '600px',
       data: {
-        allProperties: this.propertyGroups$,
+        allProperties: this.properties$,
         allCosts: this.costs$
       }
     });
@@ -52,7 +63,7 @@ export class PropertyGroupComponent implements OnInit {
       width: '600px',
       data: {
         ...e,
-        allProperties: this.propertyGroups$,
+        allProperties: this.properties$,
         allCosts: this.costs$
       }
     });
