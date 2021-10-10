@@ -7,6 +7,10 @@
     <mat-icon>input</mat-icon>
     <span class="nav-caption">Login</span>
   </a>
+  <a mat-list-item routerLink="/propertyGroups" (click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>Property Group</mat-icon>
+    <span class="nav-caption">Property Groups</span>
+  </a>
   <a mat-list-item routerLink="/properties" (click)="onClose()" *ngIf="(isAuth$ | async)">
     <mat-icon>house</mat-icon>
     <span class="nav-caption">Properties</span>
@@ -22,6 +26,10 @@
   <a mat-list-item routerLink="/analytics" (click)="onClose()" *ngIf="(isAuth$ | async)">
     <mat-icon>show_chart</mat-icon>
     <span class="nav-caption">Analytics</span>
+  </a>
+  <a mat-list-item routerLink="/costs" (click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>show_chart</mat-icon>
+    <span class="nav-caption">Costs</span>
   </a>
   <mat-list-item>
     <button mat-icon-button (click)="onLogout()" *ngIf="(isAuth$ | async)">

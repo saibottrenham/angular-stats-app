@@ -40,9 +40,11 @@ export class AddTennantComponent implements OnInit {
         // Edit Steps
         if (this.data?.id) {
             this.tennantService.editTennant(
-                {...tennant, id: this.data.id, userId: this.data.userId}
+                {...tennant, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
             );
         } else {
+            tennant.created = new Date();
+            tennant.lastUpdated = new Date();
             this.tennantService.addTennant(tennant);
         }
     }

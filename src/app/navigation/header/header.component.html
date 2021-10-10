@@ -16,6 +16,9 @@
         <a routerLink="/login">Login</a>
       </li>
       <li *ngIf="isAuth$ | async">
+        <a routerLink="/propertyGroups">Property Groups</a>
+      </li>
+      <li *ngIf="isAuth$ | async">
         <a routerLink="/properties">Properties</a>
       </li>
       <li *ngIf="isAuth$ | async">
@@ -23,6 +26,9 @@
       </li>
       <li *ngIf="isAuth$ | async">
         <a routerLink="/propertyManagers">Property Managers</a>
+      </li>
+      <li *ngIf="isAuth$ | async">
+        <a routerLink="/costs">Costs</a>
       </li>
       <li *ngIf="isAuth$ | async">
         <a routerLink="/analytics">Analytics</a>

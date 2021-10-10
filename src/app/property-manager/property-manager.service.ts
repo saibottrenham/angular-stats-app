@@ -27,7 +27,7 @@ export class PropertyManagerService {
       private uiStore: Store<fromUI.State>) {
   }
 
-  fetchPropertyManager() {
+  fetchPropertyManagers() {
     this.userID = localStorage.getItem('userId');
     if (!this.userID) {
       this.uiService.showSnackbar('No User Id present, did not query Property Managers', null, 3000);

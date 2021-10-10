@@ -5,6 +5,8 @@ import { PropertyRoutingModule } from './property-routing.module';
 import { AddPropertyComponent } from './property/add-property/add-property.component';
 import { propertyReducer } from './property.reducer';
 import { StoreModule } from '@ngrx/store';
+import { propertyManagerReducer } from '../property-manager/property-manager.reducer';
+import { tennantReducer } from '../tennant/tennant.reducer';
 
 
 
@@ -16,7 +18,9 @@ import { StoreModule } from '@ngrx/store';
   imports: [
     SharedModule,
     PropertyRoutingModule,
-    StoreModule.forFeature('property', propertyReducer)
+    StoreModule.forFeature('property', propertyReducer),
+    StoreModule.forFeature('propertyManager', propertyManagerReducer),
+    StoreModule.forFeature('tennant', tennantReducer)
   ],
   entryComponents: [AddPropertyComponent]
 })

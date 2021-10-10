@@ -1,0 +1,86 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="propertyGroupForm">
+  <mat-card>
+      <mat-card-title fxLayoutAlign="center">Add Property Group</mat-card-title>
+      <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
+          <section fxFlex="100%" fxFlex.gt-sm="33%" class="image-container">
+              <app-image-upload
+                      (urlEmitter)="onUploadFinished($event)"
+                      [path]="propertyPath"
+                      [alreadyPresentUrl]="data?.imageUrl"
+              ></app-image-upload>
+          </section>
+          <section fxFlex="100%" fxFlex.gt-sm="66%"  fxLayoutAlign="center" fxLayout="column">
+            <h4>Property Details: </h4>
+            <mat-form-field appearance="standard">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Name" required>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Properties</mat-label>
+              <mat-chip-list #propertyList aria-label="Property selection">
+                <mat-chip
+                  *ngFor="let property of properties"
+                  (removed)="removeProperty(property)"
+                  >
+                  {{property.name}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="Add a Property"
+                  #propertyInput
+                  [formControl]="propertyCtrl"
+                  [matAutocomplete]="property"
+                  [matChipInputFor]="propertyList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  >
+              </mat-chip-list>
+              <mat-autocomplete #property="matAutocomplete" (optionSelected)="selectProperty($event)">
+                <mat-option *ngFor="let property of filteredProperties | async" [value]="property">
+                  {{property.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Costs</mat-label>
+              <mat-chip-list #costList aria-label="Cost selection">
+                <mat-chip
+                  *ngFor="let cost of costs"
+                  (removed)="removeCost(cost)"
+                  >
+                  {{cost.name}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="Add a Cost"
+                  #costInput
+                  [formControl]="costCtrl"
+                  [matAutocomplete]="cost"
+                  [matChipInputFor]="costList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  >
+              </mat-chip-list>
+              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="selectCost($event)">
+                <mat-option *ngFor="let cost of filteredCosts | async" [value]="cost">
+                  {{cost.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Notes</mat-label>
+              <textarea matInput
+              formControlName="notes"
+              placeholder="Notes"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="4"
+              cdkAutosizeMaxRows="10"></textarea>
+            </mat-form-field>
+          </section>
+      </mat-card-content>
+      <mat-card-actions fxLayoutAlign="center">
+          <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
+          <button type="submit" mat-raised-button [disabled]="propertyGroupForm.invalid" [mat-dialog-close]="true" color="primary">
+              {{data?.id ? 'Update' : 'Add' }}
+          </button>
+      </mat-card-actions>
+  </mat-card>
+</form>

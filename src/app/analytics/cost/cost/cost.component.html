@@ -2,20 +2,20 @@
     <mat-spinner diameter="50"></mat-spinner>
 </section>
 <div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
-    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let property of properties$ | async">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let cost of costs$ | async">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>{{property.name}}</mat-card-title>
-                <mat-card-subtitle>{{property.address}}</mat-card-subtitle>
+                <mat-card-title>{{cost.name}}</mat-card-title>
+                <mat-card-subtitle>{{cost.frequency}} - $AUD {{cost.amount}}</mat-card-subtitle>
             </mat-card-header>
-            <div class="image-container" fxLayoutAlign="center" *ngIf="property.imageUrl">
-                <img [src]="property.imageUrl" alt="{{ property.name }}">
+            <div class="image-container" fxLayoutAlign="center" *ngIf="cost.receipt">
+                <img [src]="cost.receipt" alt="{{ cost.name }}">
             </div>
             <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Edit a House" (click)="editPoperty(property)">
+                <button mat-mini-fab color="" aria-label="Add Another Cost" (click)="editCost(cost)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-mini-fab color="warn" aria-label="Delete a House" (click)="deleteProperty(property)">
+                <button mat-mini-fab color="warn" aria-label="Add Another Cost" (click)="deleteCost(cost)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-card-actions>
@@ -23,7 +23,7 @@
     </div>
     <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
         <mat-card fxLayoutAlign="center">
-            <button mat-fab color="primary" aria-label="Add Another Property" (click)="addProperty()">
+            <button mat-fab color="primary" aria-label="Add Another Cost" (click)="addCost()">
                 <mat-icon>add</mat-icon>
             </button>
         </mat-card>

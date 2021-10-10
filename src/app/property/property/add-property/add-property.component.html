@@ -28,7 +28,7 @@
               <mat-chip-list #tennantsList aria-label="Tenant selection">
                 <mat-chip
                   *ngFor="let tennant of tennants"
-                  (removed)="remove(tennant, tennants, allTennants)"
+                  (removed)="removeTennant(tennant)"
                   >
                   {{tennant.name}}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
@@ -42,7 +42,7 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   >
               </mat-chip-list>
-              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="selected($event, allTennants, tennants)">
+              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="selectTennant($event)">
                 <mat-option *ngFor="let tennant of filteredTennants | async" [value]="tennant">
                   {{tennant.name}}
                 </mat-option>
@@ -53,7 +53,7 @@
               <mat-chip-list #propertyManagersList aria-label="Property Manager selection">
                 <mat-chip
                   *ngFor="let propertyManager of propertyManagers"
-                  (removed)="remove(propertyManager, propertyManagers, allPropertyManagers)"
+                  (removed)="removePropertyManager(propertyManager)"
                   >
                   {{propertyManager.name}}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
@@ -67,7 +67,7 @@
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   >
               </mat-chip-list>
-              <mat-autocomplete #propertyManagerAuto="matAutocomplete" (optionSelected)="selected($event, allPropertyManagers, propertyManagers)">
+              <mat-autocomplete #propertyManagerAuto="matAutocomplete" (optionSelected)="selectPropertyManager($event)">
                 <mat-option *ngFor="let propertyManager of filteredPropertyManagers | async" [value]="propertyManager">
                   {{propertyManager.name}}
                 </mat-option>

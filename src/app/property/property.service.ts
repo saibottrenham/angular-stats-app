@@ -70,16 +70,16 @@ export class PropertyService {
 
   addProperty(e: Property) {
     e.userId = localStorage.getItem('userId');
-    this.uiService.addToDB(e, this.propertyPath, 'Added House Successfully');
+    this.uiService.addToDB(e, this.propertyPath, 'Added Property Successfully');
   }
 
   editProperty(e: Property) {
-    this.uiService.updateToDB(e, this.propertyPath, 'Edited House Successfully');
+    this.uiService.updateToDB(e, this.propertyPath, 'Edited Property Successfully');
   }
 
   deleteProperty(e: Property) {
     const newE = {...e, userId: localStorage.getItem('userId')};
-    this.uiService.deleteFromDB(newE, this.propertyPath, 'Deleted House Successfully');
+    this.uiService.deleteFromDB(newE, this.propertyPath, 'Deleted Property Successfully');
   }
 
   cancelSubscriptions() {

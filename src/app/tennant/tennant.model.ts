@@ -6,4 +6,6 @@ export interface Tennant {
     address: string;
     email: string;
     imageUrl: string;
+    created?: Date;
+    lastUpdated?: Date;
 }

@@ -1,0 +1,50 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="costForm">
+    <mat-card>
+        <mat-card-title fxLayoutAlign="center">Add Cost</mat-card-title>
+        <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
+            <section fxFlex="100" fxFlex.lt-sm="33" class="image-container">
+                <app-image-upload
+                        (urlEmitter)="onUploadFinished($event)"
+                        [path]="costPath"
+                        [alreadyPresentUrl]="data?.receipt"
+                ></app-image-upload>
+            </section>
+            <section fxFlex="100" fxLayoutAlign="center" fxLayout="column">
+                <mat-form-field appearance="standard">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Name" required>
+                </mat-form-field>
+                <mat-form-field appearance="standad">
+                    <mat-label>Choose Frequency</mat-label>
+                    <mat-select formControlName="frequency" placeholder="Frequency" required>
+                      <mat-option value="weekly">Weekly</mat-option>
+                      <mat-option value="bi-weekly">Bi Weekly</mat-option>
+                      <mat-option value="monthly">Monthly</mat-option>
+                      <mat-option value="one-time">One Time</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Amount</mat-label>
+                    <input matInput formControlName="amount" placeholder="amount" required>
+                </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Choose a Payment Date</mat-label>
+                    <input matInput [matDatepicker]="datepicker" formControlName="paymentDate">
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker>
+                      <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>Cancel</button>
+                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                      </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+            </section>
+        </mat-card-content>
+        <mat-card-actions fxLayoutAlign="center">
+            <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
+            <button type="submit" mat-raised-button [disabled]="costForm.invalid" [mat-dialog-close]="true" color="primary">
+                {{data?.id ? 'Update' : 'Add' }}
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</form>

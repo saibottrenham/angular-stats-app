@@ -30,7 +30,7 @@ export class PropertyManagerComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
     this.propertyManagers$ = this.store.select(fromPropertyManager.getPropertyManagers);
-    this.propertyManagerService.fetchPropertyManager();
+    this.propertyManagerService.fetchPropertyManagers();
   }
 
   addManager() {
