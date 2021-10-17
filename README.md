@@ -6,8 +6,8 @@ easy to use and lightweight work environment that makes navigating between diffe
 the past. 
 
 ### Features include (and or will include): 
-    * Add properties, tennants and property managers. 
-    * Add reoccuring and one time cost.
+    * Add properties, tennants and property managers. (Done)
+    * Add reoccuring and one time cost. (Done)
     * Review performance of individual properties, yearly earnings and profitability
     * Export reports
     * Realtime database and data entry updates
@@ -16,4 +16,4 @@ the past.
     * import advertising channel communications, funneled inside one platform
 
 ### Current State WIP
-    * Add properties, tennants and property managers. 90% done
+    * Review performance of individual properties, yearly earnings and profitability
