@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AddPropertyComponent } from './add-property/add-property.component';
@@ -58,10 +58,11 @@ export class PropertyComponent implements OnInit {
         allPropertyManagers: this.propertyManagers$
       }
     });
+    dialogRef.afterClosed().subscribe(() => this.propertyService.fetchProperties());
   }
 
   editPoperty(e: Property) {
-    this.dialog.open(AddPropertyComponent, {
+    const dialogRef = this.dialog.open(AddPropertyComponent, {
       width: '600px',
       data: {
         ...e,
@@ -69,6 +70,7 @@ export class PropertyComponent implements OnInit {
         allPropertyManagers: this.propertyManagers$
       }
     });
+    dialogRef.afterClosed().subscribe(() => this.propertyService.fetchProperties());
   }
 
   deleteProperty(e: Property) {

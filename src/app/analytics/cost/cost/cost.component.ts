@@ -8,7 +8,6 @@ import * as fromUI from '../../../shared/ui.reducer';
 import { Observable } from 'rxjs';
 import { Cost } from '../cost.model';
 import { Store } from '@ngrx/store';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 
 @Component({
@@ -22,7 +21,6 @@ export class CostComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private afAuth: AngularFireAuth,
     private costService: CostService,
     private store: Store<fromCost.State>,
     private uiStore: Store<fromUI.State>
@@ -38,14 +36,15 @@ export class CostComponent implements OnInit {
     const dialogRef = this.dialog.open(AddCostComponent, {
       width: '600px',
     });
+    dialogRef.afterClosed().subscribe(() => this.costService.fetchCosts());
   }
 
   editCost(e: Cost) {
-    console.log(e);
-    this.dialog.open(AddCostComponent, {
+    const dialogRef = this.dialog.open(AddCostComponent, {
       width: '600px',
       data: e
     });
+    dialogRef.afterClosed().subscribe(() => this.costService.fetchCosts());
   }
 
   deleteCost(e: Cost) {

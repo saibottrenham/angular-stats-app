@@ -38,7 +38,7 @@ export class AuthService {
     this.store.dispatch(new UI.StartLoading());
     this.afAuth.createUserWithEmailAndPassword(
       authData.email, authData.password
-    ).then(result => {
+    ).then(() => {
       this.store.dispatch(new UI.StopLoading());
     }).catch(error => {
       this.store.dispatch(new UI.StopLoading());
@@ -50,7 +50,7 @@ export class AuthService {
     this.store.dispatch(new UI.StartLoading());
     this.afAuth.signInWithEmailAndPassword(
       authData.email, authData.password
-    ).then(result => {
+    ).then(() => {
       this.store.dispatch(new UI.StopLoading());
     }).catch(error => {
       this.store.dispatch(new UI.StopLoading());

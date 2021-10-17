@@ -34,6 +34,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
 
     @Output() urlEmitter: EventEmitter<string> = new EventEmitter<string>();
 
+    @Output() progressEmitter: EventEmitter<number> = new EventEmitter<number>();
+
     public isDragValid: boolean;
     public progressValue = null;
     private readonly uploads: Subscription[] = [];
@@ -96,6 +98,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
     private uploadImage(file: File) {
         // Cancel previous uploads before starting a new one
         this.cancelUploads();
+        this.progressEmitter.emit(0);
 
         // Start upload
         this.progressValue = null;
@@ -111,12 +114,18 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
             .pipe(
                 finalize(() => {
                     this.downloadURL = fileRef.getDownloadURL();
-                    this.downloadURL.subscribe(url => { if (url) { this.urlEmitter.emit(url); }
+                    this.downloadURL.subscribe(url => { if (url) { 
+                        this.urlEmitter.emit(url); 
+                        this.progressEmitter.emit(0);
+                        }
                     });
                 })
             )
             .subscribe(url => {
-                if (url) { this.progressValue = (100 / url.totalBytes) * url.bytesTransferred; }
+                if (url) { 
+                    this.progressValue = (100 / url.totalBytes) * url.bytesTransferred; 
+                    this.progressEmitter.emit(this.progressValue);
+                }
             });
     }
 

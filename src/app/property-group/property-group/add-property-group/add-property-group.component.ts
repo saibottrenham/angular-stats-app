@@ -17,6 +17,7 @@ import { Cost } from '../../../analytics/cost/cost.model';
 export class AddPropertyGroupComponent implements OnInit {
     propertyGroupForm: FormGroup;
     imageUrl: string;
+    uploadProgress = 0;
     propertyGroupPath = 'PropertyGroup';
     selectable = true;
     removable = true;
@@ -49,40 +50,45 @@ export class AddPropertyGroupComponent implements OnInit {
         }
 
     ngOnInit(): void {
-        this.properties = [...(this.data?.properties || [])];
-        this.costs = [...(this.data?.costs || [])];
         this.data?.allProperties.subscribe(x => {
+            this.properties = x.filter(property => {
+              return (this.data?.properties || []).filter((propertyId: string) => {
+                return propertyId === property.id;
+              }).length !== 0
+            });
+
             this.allProperties = x.filter(property => {
-              return (this.data?.properties || []).filter((property2: Property) => {
-                return property2.id == property.id;
-              }).length == 0
+              return (this.data?.properties || []).filter((propertyId: string) => {
+                return propertyId === property.id;
+              }).length === 0
           });
         });
         this.data?.allCosts.subscribe(x => {
+          this.costs = x.filter(cost => {
+            return (this.data?.costs || []).filter((costId: string) => {
+              return costId === cost.id;
+            }).length !== 0
+        });
+
           this.allCosts = x.filter(cost => {
-            return (this.data?.costs || []).filter((cost2: Cost) => {
-              return cost2?.id == cost.id;
-            }).length == 0
+            return (this.data?.costs || []).filter((costId: string) => {
+              return costId === cost.id;
+            }).length === 0
         });
       });
 
           this.propertyGroupForm = this.fb.group({
             name: new FormControl(this.data?.name, {validators: [Validators.required]}),
             notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
-            properties: this.fb.array(this.data?.properties ? this.data.properties : []),
-            costs: this.fb.array(this.data?.costs ? this.data.costs : [])
+            properties: this.fb.array(this.properties),
+            costs: this.fb.array(this.costs)
           });
-    }
-   
-
-    onUploadFinished(imageUrl: string) {
-      this.imageUrl = imageUrl;
-    }   
+    }  
 
     onSubmit() {
       const propertyGroup = this.propertyGroupForm.value;
-      propertyGroup.properties = this.properties;
-      propertyGroup.costs = this.costs;
+      propertyGroup.properties = this.properties.map(property => property.id);
+      propertyGroup.costs = this.costs.map(cost => cost.id);
 
       propertyGroup.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
       // Edit Steps

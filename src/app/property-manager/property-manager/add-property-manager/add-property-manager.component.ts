@@ -11,9 +11,10 @@ import { PropertyManagerService } from '../../property-manager.service';
 })
 export class AddPropertyManagerComponent implements OnInit {
     managerForm: FormGroup;
-    imageUrl: string;
+    imageUrl: string = null;
     manager: PropertyManager;
     propertyManagerPath = 'PropertyManager';
+    uploadProgress = 0;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PropertyManager,

@@ -49,23 +49,29 @@ export class PropertyGroupComponent implements OnInit {
   }
 
   addPropertyGroup() {
-    const dialogRef = this.dialog.open(AddPropertyGroupComponent, {
+    const dialogref = this.dialog.open(AddPropertyGroupComponent, {
       width: '600px',
       data: {
         allProperties: this.properties$,
         allCosts: this.costs$
       }
     });
+    dialogref.afterClosed().subscribe(() => {
+      this.propertyGroupService.fetchPropertyGroups();
+    });
   }
 
   editPopertyGroup(e: PropertyGroup) {
-    this.dialog.open(AddPropertyGroupComponent, {
+    const dialogref = this.dialog.open(AddPropertyGroupComponent, {
       width: '600px',
       data: {
         ...e,
         allProperties: this.properties$,
         allCosts: this.costs$
       }
+    });
+    dialogref.afterClosed().subscribe(() => {
+      this.propertyGroupService.fetchPropertyGroups();
     });
   }
 

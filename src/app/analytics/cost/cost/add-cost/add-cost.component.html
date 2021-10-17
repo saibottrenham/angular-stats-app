@@ -4,7 +4,9 @@
         <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
             <section fxFlex="100" fxFlex.lt-sm="33" class="image-container">
                 <app-image-upload
-                        (urlEmitter)="onUploadFinished($event)"
+                        #imageUpload
+                        (urlEmitter)="receipt = $event"
+                        (progressEmitter)="uploadProgress = $event"
                         [path]="costPath"
                         [alreadyPresentUrl]="data?.receipt"
                 ></app-image-upload>
@@ -42,7 +44,7 @@
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">
             <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
-            <button type="submit" mat-raised-button [disabled]="costForm.invalid" [mat-dialog-close]="true" color="primary">
+            <button type="submit" mat-raised-button [disabled]="costForm.invalid || (uploadProgress > 0)" [mat-dialog-close]="true" color="primary">
                 {{data?.id ? 'Update' : 'Add' }}
             </button>
         </mat-card-actions>

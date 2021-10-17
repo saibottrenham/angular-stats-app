@@ -10,10 +10,11 @@ import { CostService } from '../../cost.service';
     styleUrls: ['add-cost.component.scss']
 })
 export class AddCostComponent implements OnInit {
+    receipt: string = null;
     costForm: FormGroup;
-    receipt: string;
     cost: Cost;
     costPath = 'Cost';
+    uploadProgress = 0;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Cost,
@@ -27,10 +28,6 @@ export class AddCostComponent implements OnInit {
             amount: new FormControl(this.data?.amount, { validators: [Validators.required] }),
             paymentDate: new FormControl(this.data?.paymentDate, { validators: [Validators.required] })
         });
-    }
-
-    onUploadFinished(receipt: string) {
-        this.receipt = receipt;
     }
 
     onSubmit() {

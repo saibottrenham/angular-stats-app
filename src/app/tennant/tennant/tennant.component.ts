@@ -38,13 +38,15 @@ export class TennantComponent implements OnInit {
     const dialogRef = this.dialog.open(AddTennantComponent, {
       width: '600px',
     });
+    dialogRef.afterClosed().subscribe(() => this.tennantService.fetchTennants());
   }
 
   editTennant(e: Tennant) {
-    this.dialog.open(AddTennantComponent, {
+    const dialogRef = this.dialog.open(AddTennantComponent, {
       width: '600px',
       data: e
     });
+    dialogRef.afterClosed().subscribe(() => this.tennantService.fetchTennants());
   }
 
   deleteTennant(e: Tennant) {

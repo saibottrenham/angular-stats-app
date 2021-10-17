@@ -4,9 +4,10 @@
       <mat-card-content fxLayoutGap="20px" fxLayout="row" fxLayout.lt-sm="column">
           <section fxFlex="100%" fxFlex.gt-sm="33%" class="image-container">
               <app-image-upload
-                      (urlEmitter)="onUploadFinished($event)"
+                      (urlEmitter)="imageUrl = $event"
+                      (progressEmitter)="uploadProgress = $event"
                       [path]="propertyGroupPath"
-                      [alreadyPresentUrl]=""
+                      [alreadyPresentUrl]="data?.imageUrl"
               ></app-image-upload>
           </section>
           <section fxFlex="100%" fxFlex.gt-sm="66%"  fxLayoutAlign="center" fxLayout="column">
@@ -78,8 +79,8 @@
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">
           <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
-          <button type="submit" mat-raised-button [disabled]="propertyGroupForm.invalid" [mat-dialog-close]="true" color="primary">
-              {{false ? 'Update' : 'Add' }}
+          <button type="submit" mat-raised-button [disabled]="propertyGroupForm.invalid || (uploadProgress > 0)" [mat-dialog-close]="true" color="primary">
+              {{data?.id ? 'Update' : 'Add' }}
           </button>
       </mat-card-actions>
   </mat-card>

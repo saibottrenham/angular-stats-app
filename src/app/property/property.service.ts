@@ -66,7 +66,6 @@ export class PropertyService {
       })
     )
   }
-  
 
   addProperty(e: Property) {
     e.userId = localStorage.getItem('userId');

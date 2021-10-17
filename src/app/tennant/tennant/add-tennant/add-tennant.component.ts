@@ -11,9 +11,10 @@ import { TennantService } from '../../tennant.service';
 })
 export class AddTennantComponent implements OnInit {
     tennantForm: FormGroup;
-    imageUrl: string;
+    imageUrl: string = null;
     tennant: Tennant;
     tennantPath = 'Tennant';
+    uploadProgress = 0;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Tennant,
@@ -28,10 +29,6 @@ export class AddTennantComponent implements OnInit {
             address: new FormControl(this.data?.address, { validators: [Validators.required] }),
             imageUrl: new FormControl(this.data?.imageUrl),
         });
-    }
-
-    onUploadFinished(imageUrl: string) {
-            this.imageUrl = imageUrl;
     }
 
     onSubmit() {

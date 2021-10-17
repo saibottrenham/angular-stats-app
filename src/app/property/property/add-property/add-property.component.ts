@@ -16,7 +16,8 @@ import { PropertyManager } from '../../../property-manager/property-manager.mode
 })
 export class AddPropertyComponent implements OnInit {
     propertyForm: FormGroup;
-    imageUrl: string;
+    uploadProgress = 0;
+    imageUrl: string = null;
     propertyPath = 'Property';
     selectable = true;
     removable = true;
@@ -49,42 +50,46 @@ export class AddPropertyComponent implements OnInit {
         }
 
     ngOnInit(): void {
-        this.tennants = [...(this.data?.tennants || [])];
-        this.propertyManagers = [...(this.data?.propertyManagers || [])];
+
         this.data?.allPropertyManagers.subscribe(x => {
-            this.allPropertyManagers = x.filter(propertyManager => {
-              return (this.data?.propertyManagers || []).filter((propertyManager2: PropertyManager)=> {
-                return propertyManager2.id == propertyManager.id;
-              }).length == 0
+          this.propertyManagers = x.filter(propertyManager => {
+            return (this.data?.propertyManagers || []).filter((propertyManagerId: string) => {
+              return propertyManagerId === propertyManager.id;
+            }).length !== 0
+          });
+          this.allPropertyManagers = x.filter(propertyManager => {
+              return (this.data?.propertyManagers || []).filter((propertyManagerId: string) => {
+                return propertyManagerId === propertyManager.id;
+              }).length === 0
           });
         });
         this.data?.allTennants.subscribe(x => {
+          this.tennants = x.filter(tennant => {
+            return (this.data?.tennants || []).filter((tennantId: string) => {
+              return tennantId === tennant.id;
+            }).length !== 0
+          });
             this.allTennants = x.filter(tennant => {
-              return (this.data?.tennants || []).filter((tennant2: Tennant) => {
-                return tennant2.id == tennant.id;
-              }).length == 0
+              return (this.data?.tennants || []).filter((tennantId: string) => {
+                return tennantId === tennant.id;
+            }).length === 0
           });
         });
-          this.propertyForm = this.fb.group({
-            name: new FormControl(this.data?.name, {validators: [Validators.required]}),
-            address: new FormControl(this.data?.address, {validators: [Validators.required]}),
-            notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
-            price: new FormControl(this.data?.price, {validators: [Validators.required]}),
-            rentedOut: new FormControl(this.data?.rentedOut, {validators: [Validators.required]}),
-            tennants: this.fb.array(this.data?.tennants ? this.data.tennants : []),
-            propertyManagers: this.fb.array(this.data?.propertyManagers ? this.data.propertyManagers : [])
-          });
+        this.propertyForm = this.fb.group({
+          name: new FormControl(this.data?.name, {validators: [Validators.required]}),
+          address: new FormControl(this.data?.address, {validators: [Validators.required]}),
+          notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
+          price: new FormControl(this.data?.price, {validators: [Validators.required]}),
+          rentedOut: new FormControl(this.data?.rentedOut, {validators: [Validators.required]}),
+          tennants: this.fb.array(this.tennants),
+          propertyManagers: this.fb.array(this.propertyManagers)
+        });
     }
-   
-
-    onUploadFinished(imageUrl: string) {
-      this.imageUrl = imageUrl;
-    }   
 
     onSubmit() {
       const property = this.propertyForm.value;
-      property.tennants = this.tennants;
-      property.propertyManagers = this.propertyManagers;
+      property.tennants = this.tennants.map(tennant => tennant.id);
+      property.propertyManagers = this.propertyManagers.map(propertyManager => propertyManager.id);
 
       property.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
       // Edit Steps

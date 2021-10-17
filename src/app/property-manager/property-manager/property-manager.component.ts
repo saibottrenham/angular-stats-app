@@ -21,7 +21,6 @@ export class PropertyManagerComponent implements OnInit {
 
   constructor(
       private dialog: MatDialog,
-      private afAuth: AngularFireAuth,
       private propertyManagerService: PropertyManagerService,
       private store: Store<fromPropertyManager.State>,
       private uiStore: Store<fromUI.State>
@@ -37,13 +36,15 @@ export class PropertyManagerComponent implements OnInit {
     const dialogRef = this.dialog.open(AddPropertyManagerComponent, {
       width: '600px',
     });
+    dialogRef.afterClosed().subscribe(() => this.propertyManagerService.fetchPropertyManagers());
   }
 
   editManager(e: PropertyManager) {
-    this.dialog.open(AddPropertyManagerComponent, {
+    const dialogRef = this.dialog.open(AddPropertyManagerComponent, {
       width: '600px',
       data: e
     });
+    dialogRef.afterClosed().subscribe(() => this.propertyManagerService.fetchPropertyManagers());
   }
 
   deleteManager(e: PropertyManager) {

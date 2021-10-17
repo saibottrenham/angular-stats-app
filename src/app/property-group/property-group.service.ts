@@ -52,7 +52,6 @@ export class PropertyGroupService {
       )
       .subscribe({
           next: (propertyGroups: PropertyGroup[]) => {
-            console.log(propertyGroups);
             this.uiStore.dispatch(new UI.StopLoading());
             this.store.dispatch(new PropertyGroupActions.SetPropertyGroup(propertyGroups));
           },
