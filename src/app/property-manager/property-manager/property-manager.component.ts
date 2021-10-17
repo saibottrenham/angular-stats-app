@@ -49,6 +49,7 @@ export class PropertyManagerComponent implements OnInit {
 
   deleteManager(e: PropertyManager) {
     this.propertyManagerService.deletePropertyManager(e);
+    this.propertyManagerService.fetchPropertyManagers();
   }
 
 }

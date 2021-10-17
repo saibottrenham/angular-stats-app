@@ -10,7 +10,7 @@ import { CostService } from '../../cost.service';
     styleUrls: ['add-cost.component.scss']
 })
 export class AddCostComponent implements OnInit {
-    receipt: string = null;
+    imageUrl: string = null;
     costForm: FormGroup;
     cost: Cost;
     costPath = 'Cost';
@@ -32,7 +32,7 @@ export class AddCostComponent implements OnInit {
 
     onSubmit() {
         const cost = this.costForm.value;
-        cost.receipt = this.receipt ? this.receipt : this.data?.receipt || null;
+        cost.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
         // Edit Steps
         if (this.data?.id) {
             this.costService.editCost(

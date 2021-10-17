@@ -51,6 +51,7 @@ export class TennantComponent implements OnInit {
 
   deleteTennant(e: Tennant) {
     this.tennantService.deleteTennant(e);
+    this.tennantService.fetchTennants();
   }
 
 }

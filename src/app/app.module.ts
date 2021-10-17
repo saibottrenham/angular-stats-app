@@ -25,6 +25,7 @@ import { PropertyService } from './property/property.service';
 import { TennantService } from './tennant/tennant.service';
 import { PropertyGroupService } from './property-group/property-group.service';
 import { CostService } from './analytics/cost/cost.service';
+import { CompressImageService } from './shared/compress-image.service';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { CostService } from './analytics/cost/cost.service';
     PropertyService,
     PropertyGroupService,
     CostService,
-    TennantService
+    TennantService,
+    CompressImageService
   ],
   bootstrap: [AppComponent]
 })

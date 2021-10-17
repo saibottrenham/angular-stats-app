@@ -42,7 +42,7 @@ export class CostService {
               name: doc.payload.doc.data()['name'],
               frequency: doc.payload.doc.data()['frequency'],
               amount: doc.payload.doc.data()['amount'],
-              receipt: doc.payload.doc.data()['receipt'],
+              imageUrl: doc.payload.doc.data()['imageUrl'],
               paymentDate: new Date(doc.payload.doc.data()['paymentDate'].seconds * 1000),
               created:  doc.payload.doc.data()['created'],
               lastUpdated: doc.payload.doc.data()['lastUpdated']

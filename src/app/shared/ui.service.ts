@@ -6,6 +6,7 @@ import * as fromUI from './ui.reducer';
 import { Store } from '@ngrx/store';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable()
 export class UiService {
@@ -16,6 +17,7 @@ export class UiService {
       private dialogRef: MatDialog,
       private snackBar: MatSnackBar,
       private db: AngularFirestore,
+      private storage: AngularFireStorage,
       private afAuth: AngularFireAuth,
       private store: Store<fromUI.State>) {
           this.afAuth.authState.subscribe(user => {
@@ -68,9 +70,17 @@ export class UiService {
             if (snackbarMessage) {
                 this.showSnackbar(snackbarMessage, null, 3000);
             }
+            if (data?.imageUrl) {
+              // we delete associated images to not clutter our storage and keep it lean and clean
+              this.storage.refFromURL(data?.imageUrl).delete();
+          }
         }).catch(() => {
             this.store.dispatch(new UI.StopLoading());
             this.showSnackbar('Error, could not delete, please try again later', null, 3000);
         });
+    }
+  
+    deleteImageFromStorage(imageUrl: string) {
+      this.storage.refFromURL(imageUrl).delete()
     }
 }

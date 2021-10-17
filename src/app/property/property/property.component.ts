@@ -75,6 +75,7 @@ export class PropertyComponent implements OnInit {
 
   deleteProperty(e: Property) {
     this.propertyService.deleteProperty(e);
+    this.propertyService.fetchProperties()
   }
 
 }

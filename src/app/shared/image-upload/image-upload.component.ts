@@ -3,6 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { Subscription, Observable } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
+import { CompressImageService } from '../compress-image.service';
+import { take } from 'rxjs/operators';
 
 export interface Dimensions {
     height: number;
@@ -41,7 +43,10 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
     private readonly uploads: Subscription[] = [];
     downloadURL: Observable<string>;
 
-    constructor(private storage: AngularFireStorage) {
+    constructor(
+        private storage: AngularFireStorage,
+        private compressImageService: CompressImageService
+        ) {
     }
 
     ngOnInit() { }
@@ -97,36 +102,46 @@ export class ImageUploadComponent implements OnInit, OnDestroy, OnChanges {
 
     private uploadImage(file: File) {
         // Cancel previous uploads before starting a new one
+        const previousImage = this.alreadyPresentUrl ? (' ' + this.alreadyPresentUrl).slice(1) : null;
         this.cancelUploads();
-        this.progressEmitter.emit(0);
-
-        // Start upload
+        this.progressEmitter.emit(1);
         this.progressValue = null;
         this.alreadyPresentUrl = null;
-        // Store the Subscription as http emitter for callbacks
-        const date = Date.now();
-        const filePath = `${this.path}/${date}`;
-        const fileRef = this.storage.ref(filePath);
-        const task = this.storage.upload(`${this.path}/${date}`, file);
-        this.progressValue = 0;
-        task
-            .snapshotChanges()
-            .pipe(
-                finalize(() => {
-                    this.downloadURL = fileRef.getDownloadURL();
-                    this.downloadURL.subscribe(url => { if (url) { 
-                        this.urlEmitter.emit(url); 
-                        this.progressEmitter.emit(0);
+        // compress the image for performance enhancements
+        this.compressImageService.compress(file)
+        .pipe(take(1))
+        .subscribe(compressedImage => {
+            // Store the Subscription as http emitter for callbacks
+            const date = Date.now();
+            const filePath = `${this.path}/${date}`;
+            const fileRef = this.storage.ref(filePath);
+            const task = this.storage.upload(`${this.path}/${date}`, compressedImage);
+            this.progressValue = 0;
+            task
+                .snapshotChanges()
+                .pipe(
+                    finalize(() => {
+                        this.downloadURL = fileRef.getDownloadURL();
+                        if (previousImage) {
+                            // we delete already present images to not clutter our storage and keep it lean and clean
+                            this.storage.refFromURL(previousImage).delete();
                         }
-                    });
-                })
-            )
-            .subscribe(url => {
-                if (url) { 
-                    this.progressValue = (100 / url.totalBytes) * url.bytesTransferred; 
-                    this.progressEmitter.emit(this.progressValue);
-                }
-            });
+                        this.downloadURL.subscribe(url => { if (url) { 
+                            this.urlEmitter.emit(url); 
+                            this.progressEmitter.emit(0);
+                            }
+                        });
+                    })
+                )
+                .subscribe(url => {
+                    if (url) { 
+                        this.progressValue = (100 / url.totalBytes) * url.bytesTransferred; 
+                        this.progressEmitter.emit(this.progressValue);
+                    }
+                });
+
+        });
+
     }
 
 }

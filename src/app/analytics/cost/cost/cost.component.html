@@ -8,8 +8,8 @@
                 <mat-card-title>{{cost.name}}</mat-card-title>
                 <mat-card-subtitle>{{cost.frequency}} - $AUD {{cost.amount}}</mat-card-subtitle>
             </mat-card-header>
-            <div class="image-container" fxLayoutAlign="center" *ngIf="cost?.receipt">
-                <img [src]="cost?.receipt" alt="{{ cost.name }}">
+            <div class="image-container" fxLayoutAlign="center" *ngIf="cost?.imageUrl">
+                <img [src]="cost?.imageUrl" alt="{{ cost.name }}">
             </div>
             <mat-card-actions align="right">
                 <button mat-mini-fab color="" aria-label="Add Another Cost" (click)="editCost(cost)">

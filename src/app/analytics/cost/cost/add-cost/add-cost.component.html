@@ -5,10 +5,10 @@
             <section fxFlex="100" fxFlex.lt-sm="33" class="image-container">
                 <app-image-upload
                         #imageUpload
-                        (urlEmitter)="receipt = $event"
+                        (urlEmitter)="imageUrl = $event"
                         (progressEmitter)="uploadProgress = $event"
                         [path]="costPath"
-                        [alreadyPresentUrl]="data?.receipt"
+                        [alreadyPresentUrl]="data?.imageUrl"
                 ></app-image-upload>
             </section>
             <section fxFlex="100" fxLayoutAlign="center" fxLayout="column">
