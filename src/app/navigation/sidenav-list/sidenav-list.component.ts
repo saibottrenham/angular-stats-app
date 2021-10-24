@@ -4,7 +4,7 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
 import { AuthService } from '../../auth/auth.service';

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from './auth/auth.service';
 
 @Component({
@@ -7,10 +8,19 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService
+    ) {}
+
+  close() {
+      this.sidenav.close();
+  }
 
   ngOnInit() {
     this.authService.initAuthListener();
   }
+  
+
 }

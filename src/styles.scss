@@ -81,9 +81,21 @@ p, mat-card-title, mat-card-subtitle {
 }
 
 .base-section {
-  padding: 30px;
-  height: calc(100vh - #{$toolbar-height} - 60px);
+  height: calc(100vh - #{$toolbar-height} - 1em);
   @media screen and ($mat-small) {
-    height: calc(100vh - #{$toolbar-height-mobile} - 60px);
+    height: calc(100vh - #{$toolbar-height-mobile} - 1em);
   }
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  color: lightgray;
+}
+
+.list-item-active {
+  color: map-get($candy-app-accent, 500) !important;
 }

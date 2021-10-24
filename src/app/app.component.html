@@ -1,7 +1,11 @@
-<mat-sidenav-container>
-  <mat-sidenav #sidenav role="navigation">
+<mat-sidenav-container class="main-container" (backdropClick)="close()" >
+  <mat-sidenav 
+    #sidenav mode="side" class="example-sidenav" role="navigation"
+    (keydown.escape)="close()" disableClose
+  >
     <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
     <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
     <main>

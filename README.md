@@ -6,8 +6,9 @@ easy to use and lightweight work environment that makes navigating between diffe
 the past. 
 
 ### Features include (and or will include): 
-    * Add properties, tennants and property managers. (Done)
-    * Add reoccuring and one time cost. (Done)
+    * Ability to add property-groups, properties, tennants and property managers. (Done)
+    * Automatic image compression on image upload (Done)
+    * Ability to add reoccuring and one time cost. (Done)
     * Review performance of individual properties, yearly earnings and profitability
     * Export reports
     * Realtime database and data entry updates
