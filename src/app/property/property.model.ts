@@ -11,8 +11,8 @@ export interface Property {
     price: number;
     imageUrl: string;
     rentedOut: boolean;
-    tennants?: [Tennant];
-    propertyManagers?: [PropertyManager];
+    tennants?: [string];
+    propertyManagers?: [string];
     allTennants?: Observable<Tennant[]>;
     allPropertyManagers?: Observable<PropertyManager[]>;
     created?: Date;

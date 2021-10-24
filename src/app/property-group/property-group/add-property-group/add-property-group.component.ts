@@ -5,7 +5,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { PropertyGroup } from '../../property-group.model';
 import { PropertyGroupService } from '../../property-group.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Property } from '../../../property/property.model';
 import { Cost } from '../../../analytics/cost/cost.model';
 
@@ -31,19 +31,17 @@ export class AddPropertyGroupComponent implements OnInit {
     allCosts: Cost[] = [];
     costs: Cost[] = [];
 
-    @ViewChild('propertyInput') propertyInput: ElementRef<HTMLInputElement>;
-    @ViewChild('costInput') costInput: ElementRef<HTMLInputElement>;
+    @ViewChild('propertyTrigger') propertyTrigger: MatAutocompleteTrigger;
+    @ViewChild('costTrigger') costTrigger: MatAutocompleteTrigger;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PropertyGroup,
         private propertyGroupService: PropertyGroupService,
         private fb: FormBuilder
         ) { 
-
           this.filteredProperties = this.propertyCtrl.valueChanges.pipe(
             startWith(null),
             map((property: string | null) => property ? this._filter(property, this.allProperties) : this.allProperties.slice()));
-
           this.filteredCosts = this.costCtrl.valueChanges.pipe(
             startWith(null),
             map((cost: string | null) => cost ? this._filterCost(cost, this.allCosts) : this.allCosts.slice()));
@@ -107,17 +105,23 @@ export class AddPropertyGroupComponent implements OnInit {
       const index = this.properties.indexOf(property);
       if (index >= 0) {
         this.properties.splice(index, 1);
+        // trigger the list change
+        this.properties = [...this.properties];
       }
-      this.allProperties.push(property);
+      this.allProperties = [property, ...this.allProperties]
+      // trigger a form ctrl reset
+      this.propertyCtrl.setValue('');
     }
   
     selectProperty(event: MatAutocompleteSelectedEvent): void {
-      this.propertyCtrl.setValue(null);
-      this.properties.push(event.option.value);
+      this.properties = [...this.properties, event.option.value];
       this.allProperties = this.allProperties.filter(item => {
         return this.properties.indexOf(item) === -1;
       });
-      this.propertyCtrl.setValue(null);
+      this.propertyCtrl.setValue('');
+      setTimeout(() => {
+        this.propertyTrigger.openPanel();
+      }, 0);
     }
 
     removeCost(cost: Cost): void {
@@ -125,21 +129,22 @@ export class AddPropertyGroupComponent implements OnInit {
       if (index >= 0) {
         this.costs.splice(index, 1);
         // trigger the list change
-        this.costs = [].concat(this.costs);
+        this.costs = [...this.costs];
       }
-      this.allCosts = [cost].concat(this.allCosts);
+      this.allCosts = [cost, ...this.allCosts];
       // trigger a form ctrl reset
-      this.costCtrl.setValue(null);
+      this.costCtrl.setValue('');
     }
   
     selectCost(event: MatAutocompleteSelectedEvent): void {
       this.costs = [...this.costs, event.option.value];
-      this.allCosts = [].concat(this.allCosts.filter(item => {
+      this.allCosts = this.allCosts.filter(item => {
         return this.costs.indexOf(item) === -1;
-      }));
-      this.costCtrl.setValue(null);
-      this.costInput.nativeElement.blur();
-
+      });
+      this.costCtrl.setValue('');
+      setTimeout(() => {
+        this.costTrigger.openPanel();
+      }, 0);
     }
 
     private _filter(value: string, filterArray = []): Property[] {
@@ -153,6 +158,15 @@ export class AddPropertyGroupComponent implements OnInit {
     }
 
     addProperty() {
+      setTimeout(() => {
+        this.propertyTrigger.closePanel();
+      }, 0);
       console.log('adding a property');
+    }
+    addCost() {
+      setTimeout(() => {
+        this.costTrigger.closePanel();
+      }, 0);
+      console.log('adding a cost');
     }
   }

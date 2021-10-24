@@ -6,6 +6,7 @@ import { AddPropertyGroupComponent } from './property-group/add-property-group/a
 import { propertyGroupReducer } from './property-group.reducer';
 import { StoreModule } from '@ngrx/store';
 import { costReducer } from '../analytics/cost/cost.reducer';
+import { propertyReducer } from '../property/property.reducer';
 
 
 
@@ -18,7 +19,7 @@ import { costReducer } from '../analytics/cost/cost.reducer';
     SharedModule,
     PropertyGroupRoutingModule,
     StoreModule.forFeature('propertyGroup', propertyGroupReducer),
-    StoreModule.forFeature('property', propertyGroupReducer),
+    StoreModule.forFeature('property', propertyReducer),
     StoreModule.forFeature('cost', costReducer),
   ],
   entryComponents: [AddPropertyGroupComponent]

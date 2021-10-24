@@ -25,6 +25,7 @@ export class PropertyService {
   }
 
   fetchProperties() {
+
     this.userId = localStorage.getItem('userId');
     if (!this.userId) {
       this.uiService.showSnackbar('No User Id present, did not query Properties', null, 3000);
@@ -54,6 +55,7 @@ export class PropertyService {
         })
       )
       .subscribe({
+
           next: (properties: Property[]) => {
             this.uiStore.dispatch(new UI.StopLoading());
             this.store.dispatch(new PropertyActions.SetProperty(properties));

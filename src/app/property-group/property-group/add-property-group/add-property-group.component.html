@@ -17,34 +17,50 @@
                 <input matInput formControlName="name" placeholder="Name" required>
             </mat-form-field>
             <div class="table-container" >
-              <app-shared-table [dataSource]="properties" [columnsToDisplay]="['name', 'address']"></app-shared-table>
+              <app-shared-table 
+                [dataSource]="properties"
+                [columnsToDisplay]="['name', 'address', 'removeable', 'actions']"
+                (removeEmitter)="removeProperty($event)"
+              ></app-shared-table>
             </div>
             <mat-form-field appearance="standard">
               <mat-label>Properties</mat-label>
                 <input
-                  placeholder="Add a Property"
-                  aria-label="add a poperty input"
+                  placeholder="Select a Property"
+                  aria-label="Select a property"
                   matInput
-                  #propertyInput
                   [formControl]="propertyCtrl"
                   [matAutocomplete]="property"
+                  #propertyTrigger="matAutocompleteTrigger"
+                  (click)="propertyTrigger.openPanel()"
                  >
+                 <button 
+                  *ngIf="propertyTrigger.panelOpen"
+                  title="close property autofill window"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="close property autocomplete"
+                  (click)="propertyTrigger.closePanel(); $event.stopPropagation()"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                <button 
+                  title="Add a new Property"
+                  *ngIf="!propertyTrigger.panelOpen"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="add property"
+                 (click)="addProperty(); $event.stopPropagation()">
+                 <mat-icon>add</mat-icon>
+                </button>
               <mat-autocomplete #property="matAutocomplete" (optionSelected)="selectProperty($event)">
                 <mat-option *ngFor="let property of filteredProperties | async" [value]="property">
                   {{property.name}}
                 </mat-option>
               </mat-autocomplete>
-              <button 
-                type="button" matSuffix mat-icon-button
-                color="primary" aria-label="add property"
-                (click)="addProperty()">
-                <mat-icon>add</mat-icon>
-              </button>
             </mat-form-field>
             <div class="table-container" >
               <app-shared-table 
                 [dataSource]="costs" 
-                [columnsToDisplay]="['name', 'amount', 'removeable', 'actions']"
+                [columnsToDisplay]="['name', 'amount', 'frequency', 'removeable', 'actions']"
                 (removeEmitter)="removeCost($event)"
               >
               </app-shared-table>
@@ -56,10 +72,27 @@
                      aria-label="add a cost input"
                      matInput
                      [formControl]="costCtrl"
-                     [matAutocomplete]="auto"
-                     #costInput
+                     [matAutocomplete]="cost"
+                     #costTrigger="matAutocompleteTrigger"
+                     (click)="costTrigger.openPanel()"
               >
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectCost($event)">
+              <button 
+                title="Close cost autofill window"
+                *ngIf="costTrigger.panelOpen"
+                type="button" matSuffix mat-icon-button
+                color="primary" aria-label="close property autocomplete"
+                (click)="costTrigger.closePanel(); $event.stopPropagation()">
+                <mat-icon>cancel</mat-icon>
+             </button>
+              <button 
+                title="Add a new property"
+                *ngIf="!costTrigger.panelOpen"
+                type="button" matSuffix mat-icon-button
+                color="primary" aria-label="add property"
+                (click)="addCost(); $event.stopPropagation()">
+                <mat-icon>add</mat-icon>
+             </button>
+              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="selectCost($event)">
                 <mat-option *ngFor="let option of filteredCosts | async" [value]="option">
                   {{option.name}}
                 </mat-option>

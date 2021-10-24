@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AddPropertyGroupComponent } from './add-property-group/add-property-group.component';
@@ -7,7 +7,6 @@ import * as fromUI from '../../shared/ui.reducer';
 import * as fromPropertyGroup from '../property-group.reducer';
 import * as fromProperty from '../../property/property.reducer';
 import * as fromCost from '../../analytics/cost/cost.reducer';
-import * as fromRoot from '../../app.reducer';
 import { PropertyGroupService } from '../property-group.service';
 import { PropertyGroup } from '../property-group.model';
 import { Cost } from '../../analytics/cost/cost.model';
@@ -30,7 +29,7 @@ export class PropertyGroupComponent implements OnInit {
   constructor(
       private dialog: MatDialog,
       private propertyGroupService: PropertyGroupService,
-      private popertyService: PropertyService,
+      private propertyService: PropertyService,
       private costService: CostService,
       private propertyGroupStore: Store<fromPropertyGroup.State>,
       private propertyStore: Store<fromProperty.State>,
@@ -39,12 +38,12 @@ export class PropertyGroupComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
+    this.isLoading$ = this.uiStore.select(fromUI.getIsLoading);
     this.costs$ = this.costStore.select(fromCost.getCosts);
     this.propertyGroups$ = this.propertyGroupStore.select(fromPropertyGroup.getPropertyGroups);
     this.properties$ = this.propertyStore.select(fromProperty.getProperties);
     this.costService.fetchCosts();
-    this.popertyService.fetchProperties();
+    this.propertyService.fetchProperties();
     this.propertyGroupService.fetchPropertyGroups();
   }
 
