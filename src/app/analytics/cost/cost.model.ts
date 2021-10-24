@@ -7,5 +7,5 @@ export interface Cost {
     imageUrl?: string;
     paymentDate?: Date;
     created: Date;
-    lastUpdated: Date
+    lastUpdated: Date;
 }

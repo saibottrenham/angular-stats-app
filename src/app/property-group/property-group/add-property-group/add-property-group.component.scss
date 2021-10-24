@@ -10,9 +10,12 @@
     top: .5em;
 }
 
-
 .image-container {
     min-height: 5em;
     display: flex;
     max-height: 400px;
+}
+
+.table-container {
+    overflow: scroll;
 }

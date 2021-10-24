@@ -50,7 +50,7 @@ export class PropertyGroupComponent implements OnInit {
 
   addPropertyGroup() {
     const dialogref = this.dialog.open(AddPropertyGroupComponent, {
-      width: '600px',
+      width: '100%',
       data: {
         allProperties: this.properties$,
         allCosts: this.costs$
@@ -63,7 +63,7 @@ export class PropertyGroupComponent implements OnInit {
 
   editPopertyGroup(e: PropertyGroup) {
     const dialogref = this.dialog.open(AddPropertyGroupComponent, {
-      width: '600px',
+      width: '100%',
       data: {
         ...e,
         allProperties: this.properties$,

@@ -31,8 +31,8 @@ export class AddPropertyGroupComponent implements OnInit {
     allCosts: Cost[] = [];
     costs: Cost[] = [];
 
-  @ViewChild('propertyInput') propertyInput: ElementRef<HTMLInputElement>;
-  @ViewChild('costInput') costInput: ElementRef<HTMLInputElement>;
+    @ViewChild('propertyInput') propertyInput: ElementRef<HTMLInputElement>;
+    @ViewChild('costInput') costInput: ElementRef<HTMLInputElement>;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PropertyGroup,
@@ -51,26 +51,26 @@ export class AddPropertyGroupComponent implements OnInit {
 
     ngOnInit(): void {
         this.data?.allProperties.subscribe(x => {
-            this.properties = x.filter(property => {
+            this.properties = (x || []).filter(property => {
               return (this.data?.properties || []).filter((propertyId: string) => {
                 return propertyId === property.id;
               }).length !== 0
             });
 
-            this.allProperties = x.filter(property => {
+            this.allProperties = (x || []).filter(property => {
               return (this.data?.properties || []).filter((propertyId: string) => {
                 return propertyId === property.id;
               }).length === 0
           });
         });
         this.data?.allCosts.subscribe(x => {
-          this.costs = x.filter(cost => {
+          this.costs = (x || []).filter(cost => {
             return (this.data?.costs || []).filter((costId: string) => {
               return costId === cost.id;
             }).length !== 0
         });
 
-          this.allCosts = x.filter(cost => {
+          this.allCosts = (x || []).filter(cost => {
             return (this.data?.costs || []).filter((costId: string) => {
               return costId === cost.id;
             }).length === 0
@@ -112,11 +112,11 @@ export class AddPropertyGroupComponent implements OnInit {
     }
   
     selectProperty(event: MatAutocompleteSelectedEvent): void {
+      this.propertyCtrl.setValue(null);
       this.properties.push(event.option.value);
       this.allProperties = this.allProperties.filter(item => {
         return this.properties.indexOf(item) === -1;
       });
-      this.propertyInput.nativeElement.value = '';
       this.propertyCtrl.setValue(null);
     }
 
@@ -124,17 +124,22 @@ export class AddPropertyGroupComponent implements OnInit {
       const index = this.costs.indexOf(cost);
       if (index >= 0) {
         this.costs.splice(index, 1);
+        // trigger the list change
+        this.costs = [].concat(this.costs);
       }
-      this.allCosts.push(cost);
+      this.allCosts = [cost].concat(this.allCosts);
+      // trigger a form ctrl reset
+      this.costCtrl.setValue(null);
     }
   
     selectCost(event: MatAutocompleteSelectedEvent): void {
-      this.costs.push(event.option.value);
-      this.allCosts = this.allCosts.filter(item => {
+      this.costs = [...this.costs, event.option.value];
+      this.allCosts = [].concat(this.allCosts.filter(item => {
         return this.costs.indexOf(item) === -1;
-      });
-      this.costInput.nativeElement.value = '';
+      }));
       this.costCtrl.setValue(null);
+      this.costInput.nativeElement.blur();
+
     }
 
     private _filter(value: string, filterArray = []): Property[] {
@@ -145,5 +150,9 @@ export class AddPropertyGroupComponent implements OnInit {
     private _filterCost(value: string, filterArray = []): Cost[] {
       const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
       return filterArray.filter(cost => cost.name.toLowerCase().includes(filterValue));
+    }
+
+    addProperty() {
+      console.log('adding a property');
     }
   }

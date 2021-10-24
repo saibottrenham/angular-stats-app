@@ -5,11 +5,13 @@ import { MaterialModule } from '../material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ngfModule } from 'angular-file';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { SharedTableComponent } from './shared-table/shared-table.component';
 
 
 @NgModule({
   declarations: [
-    ImageUploadComponent
+    ImageUploadComponent,
+    SharedTableComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import { ImageUploadComponent } from './image-upload/image-upload.component';
     MaterialModule,
     FlexLayoutModule,
     ngfModule,
-    ImageUploadComponent
+    ImageUploadComponent,
+    SharedTableComponent
   ]
 })
 export class SharedModule {}

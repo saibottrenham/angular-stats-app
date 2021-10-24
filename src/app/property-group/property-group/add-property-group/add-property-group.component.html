@@ -16,53 +16,52 @@
                 <mat-label>Name</mat-label>
                 <input matInput formControlName="name" placeholder="Name" required>
             </mat-form-field>
+            <div class="table-container" >
+              <app-shared-table [dataSource]="properties" [columnsToDisplay]="['name', 'address']"></app-shared-table>
+            </div>
             <mat-form-field appearance="standard">
               <mat-label>Properties</mat-label>
-              <mat-chip-list #propertyList aria-label="Property selection">
-                <mat-chip
-                  *ngFor="let property of properties"
-                  (removed)="removeProperty(property)"
-                  >
-                  {{property.name}}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
                 <input
                   placeholder="Add a Property"
+                  aria-label="add a poperty input"
+                  matInput
                   #propertyInput
                   [formControl]="propertyCtrl"
                   [matAutocomplete]="property"
-                  [matChipInputFor]="propertyList"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  >
-              </mat-chip-list>
+                 >
               <mat-autocomplete #property="matAutocomplete" (optionSelected)="selectProperty($event)">
                 <mat-option *ngFor="let property of filteredProperties | async" [value]="property">
                   {{property.name}}
                 </mat-option>
               </mat-autocomplete>
+              <button 
+                type="button" matSuffix mat-icon-button
+                color="primary" aria-label="add property"
+                (click)="addProperty()">
+                <mat-icon>add</mat-icon>
+              </button>
             </mat-form-field>
+            <div class="table-container" >
+              <app-shared-table 
+                [dataSource]="costs" 
+                [columnsToDisplay]="['name', 'amount', 'removeable', 'actions']"
+                (removeEmitter)="removeCost($event)"
+              >
+              </app-shared-table>
+            </div>
             <mat-form-field appearance="standard">
-              <mat-label>Costs</mat-label>
-              <mat-chip-list #costList aria-label="Cost selection">
-                <mat-chip
-                  *ngFor="let cost of costs"
-                  (removed)="removeCost(cost)"
-                  >
-                  {{cost.name}}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input
-                  placeholder="Add a Cost"
-                  #costInput
-                  [formControl]="costCtrl"
-                  [matAutocomplete]="cost"
-                  [matChipInputFor]="costList"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  >
-              </mat-chip-list>
-              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="selectCost($event)">
-                <mat-option *ngFor="let cost of filteredCosts | async" [value]="cost">
-                  {{cost.name}}
+              <mat-label>Add Cost</mat-label>
+              <input type="text"
+                     placeholder="Add a Cost"
+                     aria-label="add a cost input"
+                     matInput
+                     [formControl]="costCtrl"
+                     [matAutocomplete]="auto"
+                     #costInput
+              >
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectCost($event)">
+                <mat-option *ngFor="let option of filteredCosts | async" [value]="option">
+                  {{option.name}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
