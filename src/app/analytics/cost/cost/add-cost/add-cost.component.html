@@ -43,8 +43,8 @@
             </section>
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">
-            <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
-            <button type="submit" mat-raised-button [disabled]="costForm.invalid || (uploadProgress > 0)" [mat-dialog-close]="true" color="primary">
+            <button type="button" mat-raised-button (click)="dialogRef.close()" color="">close</button>
+            <button type="submit" mat-raised-button [disabled]="costForm.invalid || (uploadProgress > 0)" (click)="dialogRef.close()" color="primary">
                 {{data?.id ? 'Update' : 'Add' }}
             </button>
         </mat-card-actions>

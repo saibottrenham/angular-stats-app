@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { PropertyGroup } from '../../property-group.model';
 import { PropertyGroupService } from '../../property-group.service';
@@ -8,6 +8,10 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Property } from '../../../property/property.model';
 import { Cost } from '../../../analytics/cost/cost.model';
+import { AddCostComponent } from '../../../analytics/cost/cost/add-cost/add-cost.component';
+import { CostService } from '../../../analytics/cost/cost.service';
+import { PropertyService } from '../../../property/property.service';
+import { AddPropertyComponent } from '../../../property/property/add-property/add-property.component';
 
 @Component({
     selector: 'app-add-house',
@@ -36,8 +40,12 @@ export class AddPropertyGroupComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PropertyGroup,
+        private dialog: MatDialog,
         private propertyGroupService: PropertyGroupService,
-        private fb: FormBuilder
+        private costService: CostService,
+        private propertyService: PropertyService,
+        private fb: FormBuilder,
+        public dialogRef: MatDialogRef<AddPropertyGroupComponent>,
         ) { 
           this.filteredProperties = this.propertyCtrl.valueChanges.pipe(
             startWith(null),
@@ -157,16 +165,56 @@ export class AddPropertyGroupComponent implements OnInit {
       return filterArray.filter(cost => cost.name.toLowerCase().includes(filterValue));
     }
 
-    addProperty() {
-      setTimeout(() => {
-        this.propertyTrigger.closePanel();
-      }, 0);
-      console.log('adding a property');
-    }
     addCost() {
-      setTimeout(() => {
-        this.costTrigger.closePanel();
-      }, 0);
-      console.log('adding a cost');
+      this.dialog.open(AddCostComponent, {
+        width: '600px',
+        data: []
+      });
     }
+
+    editCost(cost: Cost): void {
+      this.dialog.open(AddCostComponent, {
+        width: '600px',
+        data: cost
+      });
+    }
+
+    deleteCost(cost: Cost): void {
+      const index = this.costs.indexOf(cost);
+      if (index >= 0) {
+        this.costs.splice(index, 1);
+        // trigger the list change
+        this.costs = [...this.costs];
+      }
+      this.costService.deleteCost(cost);
+    }
+
+
+    addProperty() {
+      this.dialog.open(AddPropertyComponent, {
+          width: '600px',
+          data: []
+        });
+      }
+  
+    editProperty(property: Property): void {
+      this.dialog.open(AddPropertyComponent, {
+        width: '600px',
+        data: property
+      });
+    }
+
+    deleteProperty(property: Property): void {
+      const index = this.properties.indexOf(property);
+      const allIndex = this.allProperties.indexOf(property);
+      if (index >= 0) {
+        this.properties.splice(index, 1);
+        // trigger the list change
+        this.properties = [...this.properties];
+        this.allProperties.splice(allIndex, 1);
+        this.allProperties = [...this.allProperties];
+      }
+      this.propertyService.deleteProperty(property);
+    }
+
   }

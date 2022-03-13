@@ -18,6 +18,9 @@ import { AddCostComponent } from './cost/add-cost/add-cost.component';
     CostRoutingModule,
     StoreModule.forFeature('cost', costReducer),
   ],
+  exports: [
+    AddCostComponent
+  ],
   entryComponents: [AddCostComponent]
 })
 export class CostModule { }

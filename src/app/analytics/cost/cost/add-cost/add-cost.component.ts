@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Cost } from '../../cost.model';
 import { CostService } from '../../cost.service';
@@ -18,7 +18,8 @@ export class AddCostComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Cost,
-        private costService: CostService) {
+        private costService: CostService,
+        public dialogRef: MatDialogRef<AddCostComponent>,) {
     }
 
     ngOnInit(): void {

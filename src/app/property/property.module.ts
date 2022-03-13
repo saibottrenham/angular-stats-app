@@ -22,6 +22,9 @@ import { tennantReducer } from '../tennant/tennant.reducer';
     StoreModule.forFeature('propertyManager', propertyManagerReducer),
     StoreModule.forFeature('tennant', tennantReducer)
   ],
+  exports: [
+    AddPropertyComponent,
+  ],
   entryComponents: [AddPropertyComponent]
 })
 export class PropertyModule { }

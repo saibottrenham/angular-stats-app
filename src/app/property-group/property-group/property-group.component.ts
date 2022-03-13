@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AddPropertyGroupComponent } from './add-property-group/add-property-group.component';
+import * as UI from '../../shared/ui.actions';
 import * as fromUI from '../../shared/ui.reducer';
-import * as fromPropertyGroup from '../property-group.reducer';
 import * as fromProperty from '../../property/property.reducer';
 import * as fromCost from '../../analytics/cost/cost.reducer';
 import { PropertyGroupService } from '../property-group.service';
@@ -19,11 +19,12 @@ import { PropertyService } from '../../property/property.service';
   templateUrl: './property-group.component.html',
   styleUrls: ['./property-group.component.scss']
 })
-export class PropertyGroupComponent implements OnInit {
-  propertyGroups$: Observable<PropertyGroup[]> = null;
+export class PropertyGroupComponent implements OnInit, OnDestroy {
+  propertyGroups: PropertyGroup[];
   properties$: Observable<Property[]> = null;
   costs$: Observable<Cost[]> = null;
   isLoading$: Observable<boolean>;
+  sub: Subscription;
 
 
   constructor(
@@ -31,7 +32,6 @@ export class PropertyGroupComponent implements OnInit {
       private propertyGroupService: PropertyGroupService,
       private propertyService: PropertyService,
       private costService: CostService,
-      private propertyGroupStore: Store<fromPropertyGroup.State>,
       private propertyStore: Store<fromProperty.State>,
       private costStore: Store<fromCost.State>,
       private uiStore: Store<fromUI.State>
@@ -40,11 +40,20 @@ export class PropertyGroupComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading$ = this.uiStore.select(fromUI.getIsLoading);
     this.costs$ = this.costStore.select(fromCost.getCosts);
-    this.propertyGroups$ = this.propertyGroupStore.select(fromPropertyGroup.getPropertyGroups);
     this.properties$ = this.propertyStore.select(fromProperty.getProperties);
     this.costService.fetchCosts();
     this.propertyService.fetchProperties();
-    this.propertyGroupService.fetchPropertyGroups();
+    
+    this.sub = this.propertyGroupService.fetchPropertyGroups().subscribe(
+      (res: PropertyGroup[]) => { 
+        this.propertyGroups = res; 
+        this.uiStore.dispatch(new UI.StopLoading());
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   addPropertyGroup() {

@@ -1,25 +1,27 @@
 <section class="base-section" fxLayout="row" fxLayoutAlign="center center" *ngIf="(isLoading$ | async)">
     <mat-spinner diameter="50"></mat-spinner>
 </section>
-<div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
-    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroups$ | async">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>{{propertyGroup.name}}</mat-card-title>
-            </mat-card-header>
-            <div class="image-container" fxLayoutAlign="center" *ngIf="propertyGroup.imageUrl">
-                <img [src]="propertyGroup.imageUrl" alt="{{ propertyGroup.name }}">
-            </div>
-            <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Edit a Property Group" (click)="editPopertyGroup(propertyGroup)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-mini-fab color="warn" aria-label="Delete a Property Group" (click)="deletePropertyGroup(propertyGroup)">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </mat-card-actions>
-        </mat-card>
-    </div>
+<div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid">
+    <ng-container *ngIf="!(isLoading$ | async)">
+        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroups">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{propertyGroup.name}}</mat-card-title>
+                </mat-card-header>
+                <div class="image-container" fxLayoutAlign="center" *ngIf="propertyGroup.imageUrl">
+                    <img [src]="propertyGroup.imageUrl" alt="{{ propertyGroup.name }}">
+                </div>
+                <mat-card-actions align="right">
+                    <button mat-mini-fab color="" aria-label="Edit a Property Group" (click)="editPopertyGroup(propertyGroup)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-mini-fab color="warn" aria-label="Delete a Property Group" (click)="deletePropertyGroup(propertyGroup)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </ng-container>
     <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
         <mat-card fxLayoutAlign="center">
             <button mat-fab color="primary" aria-label="Add Another Property Group" (click)="addPropertyGroup()">
