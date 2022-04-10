@@ -1,11 +1,7 @@
-export interface Tennant {
-    id: string;
-    userId?: string;
-    name: string;
+import { BaseModel } from "../shared/common-model";
+
+export interface Tennant extends BaseModel {
     mobile: string;
     address: string;
     email: string;
-    imageUrl: string;
-    created?: Date;
-    lastUpdated?: Date;
 }

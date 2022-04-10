@@ -7,10 +7,10 @@ import { PropertyGroup } from './property-group.model';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { propertyGroupPath } from '../shared/paths';
 
 @Injectable()
 export class PropertyGroupService {
-  private propertyGroupPath = 'propertiesGroup';
 
   constructor(
       private db: AngularFirestore,
@@ -25,12 +25,10 @@ export class PropertyGroupService {
       return this.afAuth.authState.pipe(
         switchMap(user => {
           if (user) {
-            console.log('userId: ', user.uid);
             return this.db
-              .collection<PropertyGroup>(this.propertyGroupPath, ref =>
+              .collection<PropertyGroup>(propertyGroupPath, ref =>
                 ref.where('userId', '==', user.uid)
-              )
-              .valueChanges({ idField: 'id' });
+              ).valueChanges({ idField: 'id' });
           } else {
             return [];
           }
@@ -38,17 +36,21 @@ export class PropertyGroupService {
       );
     }
 
-  addPropertyGroup(e: PropertyGroup) {
-    e.userId = localStorage.getItem('userId');
-    this.uiService.addToDB(e, this.propertyGroupPath, 'Added Property Group Successfully');
+    getPropertyGroup(id: string) {
+      return this.db.doc<PropertyGroup>(propertyGroupPath + '/' + id).valueChanges();
+    }
+
+  createPropertyGroup() {
+    const initialData = {created: new Date(), lastUpdated: new Date(), userId: localStorage.getItem('userId')}
+    return this.db.collection(propertyGroupPath).add(initialData);
   }
 
-  editPropertyGroup(e: PropertyGroup) {
-    this.uiService.updateToDB(e, this.propertyGroupPath, 'Edited Property Group Successfully');
+  editPropertyGroup(e: PropertyGroup) : Promise<void> {
+    return this.db.collection<PropertyGroup>(propertyGroupPath, ref => ref.where('userId', '==', e.userId)).doc(e.id).update(e);
   }
 
   deletePropertyGroup(e: PropertyGroup) {
     const newE = {...e, userId: localStorage.getItem('userId')};
-    this.uiService.deleteFromDB(newE, this.propertyGroupPath, 'Deleted Property Group Successfully');
+    this.uiService.deleteFromDB(newE, propertyGroupPath, 'Deleted Property Group Successfully');
   }
 }

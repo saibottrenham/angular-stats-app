@@ -38,6 +38,10 @@ export class UiService {
     return index > 0 ? this.days[index] : this.days[todayIndex];
   }
 
+  getFireStoreId() {
+    return this.db.createId();
+  }
+
   addToDB(data: any, path: string, snackbarMessage: string = null, closeAllDialoge: boolean = true) {
     this.store.dispatch(new UI.StartLoading());
     this.db.collection(path).add(data).then(() => {

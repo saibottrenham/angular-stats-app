@@ -20,6 +20,7 @@ export class AddCostComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: Cost,
         private costService: CostService,
         public dialogRef: MatDialogRef<AddCostComponent>,) {
+
     }
 
     ngOnInit(): void {
@@ -27,7 +28,7 @@ export class AddCostComponent implements OnInit {
             name: new FormControl(this.data?.name, {validators: [Validators.required]}),
             frequency: new FormControl(this.data?.frequency, { validators: [Validators.required] }),
             amount: new FormControl(this.data?.amount, { validators: [Validators.required] }),
-            paymentDate: new FormControl(this.data?.paymentDate, { validators: [Validators.required] })
+            paymentDate: new FormControl(this.data?.paymentDate ? new Date(this.data?.paymentDate.seconds * 1000) : null, { validators: [Validators.required] })
         });
     }
 
@@ -35,14 +36,18 @@ export class AddCostComponent implements OnInit {
         const cost = this.costForm.value;
         cost.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
         // Edit Steps
-        if (this.data?.id) {
-            this.costService.editCost(
-                {...cost, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
-            );
+        if (!this.data?.id) {
+            const id = this.costService.createCostId();
+            const newCost = {...cost, id: id, created: new Date(), lastUpdated: new Date(), userId: localStorage.getItem('userId')}
+            this.costService.createCost(id, newCost).then(() => {
+                this.dialogRef.close(newCost);
+            });
         } else {
-            cost.created = new Date();
-            cost.lastUpdated = new Date();
-            this.costService.addCost(cost);
+            this.costService.editCost(
+                {...cost, id: this.data.id, lastUpdated: new Date()}
+            ).then(() => {
+                this.dialogRef.close();
+            }); 
         }
     }
 }

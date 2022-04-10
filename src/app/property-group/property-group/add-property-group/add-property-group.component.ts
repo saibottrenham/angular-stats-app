@@ -1,17 +1,20 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { PropertyGroup } from '../../property-group.model';
 import { PropertyGroupService } from '../../property-group.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Property } from '../../../property/property.model';
 import { Cost } from '../../../analytics/cost/cost.model';
 import { AddCostComponent } from '../../../analytics/cost/cost/add-cost/add-cost.component';
 import { CostService } from '../../../analytics/cost/cost.service';
 import { PropertyService } from '../../../property/property.service';
 import { AddPropertyComponent } from '../../../property/property/add-property/add-property.component';
+import { filter } from '../../../shared/filter';
+import { BaseModel } from '../../../shared/common-model';
+import { propertyGroupPath } from '../../../shared/paths';
 
 @Component({
     selector: 'app-add-house',
@@ -22,18 +25,17 @@ export class AddPropertyGroupComponent implements OnInit {
     propertyGroupForm: FormGroup;
     imageUrl: string;
     uploadProgress = 0;
-    propertyGroupPath = 'PropertyGroup';
-    selectable = true;
-    removable = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     propertyCtrl = new FormControl();
     costCtrl = new FormControl();
-    filteredProperties: Observable<Property[]>;
-    filteredCosts: Observable<Cost[]>;
-    allProperties: Property[] = [];
+    filteredProperties: Observable<BaseModel[]>;
+    filteredCosts: Observable<BaseModel[]>;
+    tableCosts: Cost[] = [];
     properties: Property[] = [];
-    allCosts: Cost[] = [];
+    tableProperties: Property[] = [];
     costs: Cost[] = [];
+    subs = [];
+    propertyGroupPath = propertyGroupPath;
 
     @ViewChild('propertyTrigger') propertyTrigger: MatAutocompleteTrigger;
     @ViewChild('costTrigger') costTrigger: MatAutocompleteTrigger;
@@ -46,130 +48,63 @@ export class AddPropertyGroupComponent implements OnInit {
         private propertyService: PropertyService,
         private fb: FormBuilder,
         public dialogRef: MatDialogRef<AddPropertyGroupComponent>,
-        ) { 
-          this.filteredProperties = this.propertyCtrl.valueChanges.pipe(
+        ) {  
+
+        this.filteredProperties = this.propertyCtrl.valueChanges.pipe(
+          startWith(null),
+          map((property: string | null) => filter(property, this.properties, this.data?.properties)));
+        this.filteredCosts = this.costCtrl.valueChanges.pipe(
             startWith(null),
-            map((property: string | null) => property ? this._filter(property, this.allProperties) : this.allProperties.slice()));
-          this.filteredCosts = this.costCtrl.valueChanges.pipe(
-            startWith(null),
-            map((cost: string | null) => cost ? this._filterCost(cost, this.allCosts) : this.allCosts.slice()));
+            map((cost: string | null) => filter(cost, this.costs, this.data?.costs)));
+        
         }
 
     ngOnInit(): void {
-        this.data?.allProperties.subscribe(x => {
-            this.properties = (x || []).filter(property => {
-              return (this.data?.properties || []).filter((propertyId: string) => {
-                return propertyId === property.id;
-              }).length !== 0
-            });
+      if (!this.data?.id) {
+        this.propertyGroupService.createPropertyGroup().then(res => {
+          this.data.id = res.id;
+        });
+      }
 
-            this.allProperties = (x || []).filter(property => {
-              return (this.data?.properties || []).filter((propertyId: string) => {
-                return propertyId === property.id;
-              }).length === 0
-          });
-        });
-        this.data?.allCosts.subscribe(x => {
-          this.costs = (x || []).filter(cost => {
-            return (this.data?.costs || []).filter((costId: string) => {
-              return costId === cost.id;
-            }).length !== 0
-        });
+      this.subs.push(this.propertyService.fetchProperties().subscribe(properties => {
+        this.properties = properties.filter(property => !this.data?.properties || !this.data.properties.includes(property.id));
+        this.getProperties(this.data?.properties || []);
+      }));
+      this.subs.push(this.costService.fetchCosts().subscribe(costs => {
+        this.costs = costs.filter(cost => !this.data?.costs || !this.data.costs.includes(cost.id));
+        this.getCosts(this.data?.costs || []);
+      }));
 
-          this.allCosts = (x || []).filter(cost => {
-            return (this.data?.costs || []).filter((costId: string) => {
-              return costId === cost.id;
-            }).length === 0
-        });
+      this.propertyGroupForm = this.fb.group({
+        name: new FormControl(this.data?.name, {validators: [Validators.required]}),
+        notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
       });
-
-          this.propertyGroupForm = this.fb.group({
-            name: new FormControl(this.data?.name, {validators: [Validators.required]}),
-            notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
-            properties: this.fb.array(this.properties),
-            costs: this.fb.array(this.costs)
-          });
     }  
+
+    onDestroy() {
+      this.subs.forEach(sub => sub.unsubscribe());
+    }
 
     onSubmit() {
       const propertyGroup = this.propertyGroupForm.value;
-      propertyGroup.properties = this.properties.map(property => property.id);
-      propertyGroup.costs = this.costs.map(cost => cost.id);
-
       propertyGroup.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
       // Edit Steps
-      if (this.data?.id) {
-          this.propertyGroupService.editPropertyGroup(
-              {...propertyGroup, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
-          );
-      } else {
-          propertyGroup.created = new Date();
-          propertyGroup.lastUpdated = new Date();
-          this.propertyGroupService.addPropertyGroup(propertyGroup);
-      }
-    }
-  
-    removeProperty(property: Property): void {
-      const index = this.properties.indexOf(property);
-      if (index >= 0) {
-        this.properties.splice(index, 1);
-        // trigger the list change
-        this.properties = [...this.properties];
-      }
-      this.allProperties = [property, ...this.allProperties]
-      // trigger a form ctrl reset
-      this.propertyCtrl.setValue('');
-    }
-  
-    selectProperty(event: MatAutocompleteSelectedEvent): void {
-      this.properties = [...this.properties, event.option.value];
-      this.allProperties = this.allProperties.filter(item => {
-        return this.properties.indexOf(item) === -1;
-      });
-      this.propertyCtrl.setValue('');
-      setTimeout(() => {
-        this.propertyTrigger.openPanel();
-      }, 0);
-    }
-
-    removeCost(cost: Cost): void {
-      const index = this.costs.indexOf(cost);
-      if (index >= 0) {
-        this.costs.splice(index, 1);
-        // trigger the list change
-        this.costs = [...this.costs];
-      }
-      this.allCosts = [cost, ...this.allCosts];
-      // trigger a form ctrl reset
-      this.costCtrl.setValue('');
-    }
-  
-    selectCost(event: MatAutocompleteSelectedEvent): void {
-      this.costs = [...this.costs, event.option.value];
-      this.allCosts = this.allCosts.filter(item => {
-        return this.costs.indexOf(item) === -1;
-      });
-      this.costCtrl.setValue('');
-      setTimeout(() => {
-        this.costTrigger.openPanel();
-      }, 0);
-    }
-
-    private _filter(value: string, filterArray = []): Property[] {
-      const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-      return filterArray.filter(property => property.name.toLowerCase().includes(filterValue));
-    }
-
-    private _filterCost(value: string, filterArray = []): Cost[] {
-      const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-      return filterArray.filter(cost => cost.name.toLowerCase().includes(filterValue));
+      this.propertyGroupService.editPropertyGroup(
+          {...propertyGroup, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
+      );  
     }
 
     addCost() {
-      this.dialog.open(AddCostComponent, {
+      const dialogref = this.dialog.open(AddCostComponent, {
         width: '600px',
-        data: []
+        data: {}
       });
+      dialogref.afterClosed().subscribe(res => {
+        if (res) {
+          this.data.costs = this.data.costs.length ? [...this.data.costs, res.id] : [res.id];
+          this.getCosts(this.data.costs);
+        }}
+      )
     }
 
     editCost(cost: Cost): void {
@@ -180,20 +115,16 @@ export class AddPropertyGroupComponent implements OnInit {
     }
 
     deleteCost(cost: Cost): void {
-      const index = this.costs.indexOf(cost);
-      if (index >= 0) {
-        this.costs.splice(index, 1);
-        // trigger the list change
-        this.costs = [...this.costs];
-      }
-      this.costService.deleteCost(cost);
+      this.costService.deleteCost(cost).then(() => {
+        this.removeCostFromPropertyGroup(cost);
+      });
     }
 
 
     addProperty() {
       this.dialog.open(AddPropertyComponent, {
           width: '600px',
-          data: []
+          data: {}
         });
       }
   
@@ -205,16 +136,90 @@ export class AddPropertyGroupComponent implements OnInit {
     }
 
     deleteProperty(property: Property): void {
-      const index = this.properties.indexOf(property);
-      const allIndex = this.allProperties.indexOf(property);
-      if (index >= 0) {
-        this.properties.splice(index, 1);
-        // trigger the list change
-        this.properties = [...this.properties];
-        this.allProperties.splice(allIndex, 1);
-        this.allProperties = [...this.allProperties];
-      }
       this.propertyService.deleteProperty(property);
+    }
+
+    addCostToPropertyGroup(cost: Cost) {
+      const costs = this.data?.costs.length ? [...this.data.costs, cost.id] : [cost.id];
+      this.data.costs = costs;
+      this.costCtrl.setValue(null);
+      this.propertyGroupService.editPropertyGroup(
+        {
+          ...this.data,
+          costs: costs,
+          id: this.data.id,
+          userId: this.data.userId,
+          lastUpdated: new Date()
+        }
+      ).then(() => this.getCosts(costs));
+    }
+
+    removeCostFromPropertyGroup(cost: Cost) {
+      const costs = this.data?.costs.length ? this.data.costs.filter(id => id !== cost.id) : [];
+      this.data.costs = costs;
+      this.propertyGroupService.editPropertyGroup(
+        {
+          ...this.data,
+          costs: costs,
+          id: this.data.id,
+          userId: this.data.userId,
+          lastUpdated: new Date()
+        }
+      ).then(() => this.getCosts(costs));
+    }
+
+    addPropertyToPropertyGroup(property: Property) {
+      const properties = this.data?.properties.length ? [...this.data.properties, property.id] : [property.id]
+      this.data.properties = properties;
+      this.propertyCtrl.setValue(null);
+      this.propertyGroupService.editPropertyGroup(
+        {
+          ...this.data,
+          properties: properties,
+          id: this.data.id,
+          userId: this.data.userId,
+          lastUpdated: new Date()
+        }
+      ).then(() => this.getProperties(properties));
+    }
+
+    removePropertyFromPropertyGroup(property: Property) {
+      const properties = this.data?.properties.length ? this.data?.properties.filter(id => id !== property.id) : [];
+      this.data.properties = properties;
+      this.propertyGroupService.editPropertyGroup(
+        {
+          ...this.data,
+          properties: properties,
+          id: this.data.id,
+          userId: this.data.userId,
+          lastUpdated: new Date()
+        }
+      ).then(() => this.getProperties(properties));
+    }
+
+    getProperties(propertiesIds: string[]) {
+      if (propertiesIds.length) {
+        this.propertyService.getProperties(propertiesIds).subscribe(
+          res => {
+            this.tableProperties = res;
+          } 
+        );
+      } else {
+        this.tableProperties = [];
+      }
+    }
+  
+    getCosts(costsIds: string[]) {
+      console.log(costsIds);
+      if (costsIds.length) {
+        this.costService.getCosts(costsIds).subscribe(
+          res => {
+            this.tableCosts = res;
+          }
+        );
+      } else {
+        this.tableCosts = [];
+      }
     }
 
   }

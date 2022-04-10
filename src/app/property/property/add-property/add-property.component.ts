@@ -51,30 +51,6 @@ export class AddPropertyComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.data?.allPropertyManagers.subscribe(x => {
-          this.propertyManagers = x.filter(propertyManager => {
-            return (this.data?.propertyManagers || []).filter((propertyManagerId: string) => {
-              return propertyManagerId === propertyManager.id;
-            }).length !== 0
-          });
-          this.allPropertyManagers = x.filter(propertyManager => {
-              return (this.data?.propertyManagers || []).filter((propertyManagerId: string) => {
-                return propertyManagerId === propertyManager.id;
-              }).length === 0
-          });
-        });
-        this.data?.allTennants.subscribe(x => {
-          this.tennants = x.filter(tennant => {
-            return (this.data?.tennants || []).filter((tennantId: string) => {
-              return tennantId === tennant.id;
-            }).length !== 0
-          });
-            this.allTennants = x.filter(tennant => {
-              return (this.data?.tennants || []).filter((tennantId: string) => {
-                return tennantId === tennant.id;
-            }).length === 0
-          });
-        });
         this.propertyForm = this.fb.group({
           name: new FormControl(this.data?.name, {validators: [Validators.required]}),
           address: new FormControl(this.data?.address, {validators: [Validators.required]}),

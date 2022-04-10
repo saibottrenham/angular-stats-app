@@ -1,82 +1,81 @@
 import { Injectable } from '@angular/core';
 import * as UI from '../../shared/ui.actions';
 import * as fromUI from '../../shared/ui.reducer';
-import { map, Subscription } from 'rxjs';
+import { map, Observable, Subscription, switchMap } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UiService } from '../../shared/ui.service';
 import { Store } from '@ngrx/store';
 import { Cost } from './cost.model';
 import * as fromCost from './cost.reducer';
 import * as CostActions from './cost.actions';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable()
 export class CostService {
 
-  private userId: string = null;
   private fbSubs: Subscription[] = [];
   private costPath = 'cost';
 
   constructor(
       private db: AngularFirestore,
       private uiService: UiService,
-      private store: Store<fromCost.State>,
-      private uiStore: Store<fromUI.State>
+      private uiStore: Store<fromUI.State>,
+      private afAuth: AngularFireAuth
       ) {
   }
 
-  fetchCosts() {
-    this.userId = localStorage.getItem('userId');
-    if (!this.userId) {
-      this.uiService.showSnackbar('No User Id present, did not query Costs', null, 3000);
-      return;
-    }
+  fetchCosts(): Observable<Cost[]> {
     this.uiStore.dispatch(new UI.StartLoading());
-    this.fbSubs.push(this.db
-      .collection(this.costPath, ref => ref.where('userId', '==', this.userId))
-      .snapshotChanges().pipe(
-        map(docArray => {
-          return docArray.map((doc: any) => {
-            return {
-              id: doc.payload.doc.id,
-              userId: doc.payload.doc.data()['userId'],
-              name: doc.payload.doc.data()['name'],
-              frequency: doc.payload.doc.data()['frequency'],
-              amount: doc.payload.doc.data()['amount'],
-              imageUrl: doc.payload.doc.data()['imageUrl'],
-              paymentDate: new Date(doc.payload.doc.data()['paymentDate'].seconds * 1000),
-              created:  doc.payload.doc.data()['created'],
-              lastUpdated: doc.payload.doc.data()['lastUpdated']
-            }
-          })
-        })
-      )
-      .subscribe({
-          next: (costs: Cost[]) => {
-            this.uiStore.dispatch(new UI.StopLoading());
-            this.store.dispatch(new CostActions.SetCost(costs));
-          },
-          error: (e) => {
-            console.log(e);
-            this.uiStore.dispatch(new UI.StopLoading());
-            this.uiService.showSnackbar('Fetching Costs failed, please try again later', null, 3000);
-          }
-      })
-    )
+    return this.afAuth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.db
+            .collection<Cost>(this.costPath, ref =>
+              ref.where('userId', '==', user.uid)
+            )
+            .valueChanges({ idField: 'id' });
+        } else {
+          return [];
+        }
+      }),
+    );
   }
-  
 
-  addCost(e: Cost) {
-    e.userId = localStorage.getItem('userId');
-    this.uiService.addToDB(e, this.costPath, 'Added Cost Successfully');
+  getCosts(costs: String[]): Observable<Cost[]>  {
+    return this.afAuth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.db.collection<Cost>(this.costPath, ref =>
+            ref.where('id', 'in', costs).where('userId', '==', user.uid)
+          ).valueChanges({ idField: 'id' });
+        } else {
+          return [];
+        }
+      })
+    );
+  }
+
+  createCostId(): string {
+    return this.uiService.getFireStoreId();
+  }
+
+  createCost(id: string, cost: Cost) {
+      return this.db.collection(this.costPath).doc(id).set(cost);
   }
 
   editCost(e: Cost) {
-    this.uiService.updateToDB(e, this.costPath, 'Edited Cost Successfully');
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      return this.db.collection<Cost>(
+        this.costPath, ref => ref.where('userId', '==', userId)
+      ).doc(e.id).update({...e, userId: userId});
+    } else {
+      return null;
+    }   
   }
 
   deleteCost(e: Cost) {
-    const newE = {...e, userId: localStorage.getItem('userId')};
-    this.uiService.deleteFromDB(newE, this.costPath, 'Deleted Cost Successfully');
+    return this.db.collection(this.costPath, ref => ref.where('userId', '==', e.userId)).doc(e.id).delete()
   }
 
   cancelSubscriptions() {

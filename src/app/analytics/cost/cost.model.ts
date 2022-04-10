@@ -1,11 +1,8 @@
-export interface Cost {
-    id: string;
-    userId?: string;
-    name: string;
+import { BaseModel } from "../../shared/common-model";
+
+
+export interface Cost extends BaseModel {
     frequency: 'one-time' | 'weekly' | 'monthly' | 'bi-weekly';
     amount: number;
-    imageUrl?: string;
-    paymentDate?: Date;
-    created: Date;
-    lastUpdated: Date;
+    paymentDate?: {seconds: number, nanoseconds: number};
 }

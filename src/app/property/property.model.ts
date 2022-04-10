@@ -1,20 +1,13 @@
 import { Tennant } from '../tennant/tennant.model';
 import { PropertyManager } from '../property-manager/property-manager.model';
 import { Observable } from 'rxjs';
+import { BaseModel } from '../shared/common-model';
 
-export interface Property {
-    id: string;
-    userId?: string;
-    name: string;
+export interface Property extends BaseModel {
     address: string;
     notes: string;
     price: number;
-    imageUrl: string;
     rentedOut: boolean;
-    tennants?: [string];
-    propertyManagers?: [string];
-    allTennants?: Observable<Tennant[]>;
-    allPropertyManagers?: Observable<PropertyManager[]>;
-    created?: Date;
-    lastUpdated?: Date;
+    tennants?: string[];
+    propertyManagers?: string[];
 }

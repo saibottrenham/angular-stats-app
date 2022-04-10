@@ -8,10 +8,8 @@ export interface PropertyGroup {
     name: string;
     notes: string;
     imageUrl: string;
-    costs?: [Cost];
-    properties?: [Property];
-    allCosts?: Observable<Cost[]>;
-    allProperties?: Observable<Property[]>;
+    costs?: string[];
+    properties?: string[];
     created?: Date;
     lastUpdated?: Date;
 }

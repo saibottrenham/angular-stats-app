@@ -1,11 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-
-export interface Element {
-  name: string;
-  description?: string;
-  amount?: string | number;
-}
+import { BaseModel } from '../common-model';
 
 @Component({
   selector: 'app-shared-table',
@@ -19,13 +14,20 @@ export interface Element {
     ]),
   ],
 })
-export class SharedTableComponent{
-  @Input() dataSource: Element[] = [];
+export class SharedTableComponent implements OnChanges {
+  @Input() dataSource: BaseModel[] = [];
   @Input() columnsToDisplay: string[] = [];
   @Output() deleteEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Output() editEmitter: EventEmitter<string> = new EventEmitter<string>();
-  @Output() removeEmitter: EventEmitter<Element> = new EventEmitter<Element>();
+  @Output() removeEmitter: EventEmitter<BaseModel> = new EventEmitter<BaseModel>();
   expandedElement: Element | null;
 
   constructor() { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.dataSource) {
+      this.dataSource = changes.dataSource.currentValue;
+    }
+  }
+
 }

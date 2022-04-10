@@ -1,9 +1,7 @@
-export interface PropertyManager {
-    id: string;
-    userId?: string;
-    name: string;
+import { BaseModel } from "../shared/common-model";
+
+export interface PropertyManager extends BaseModel {
     mobile: string;
     email: string;
     address: string;
-    imageUrl: string;
 }
