@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropertyManager } from '../../property-manager.model';
-import { PropertyManagerService } from '../../property-manager.service';
+import { UiService } from '../../../shared/ui.service';
 
 @Component({
     selector: 'app-add-property-manager',
@@ -18,8 +18,9 @@ export class AddPropertyManagerComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PropertyManager,
-        private propertyManagerService: PropertyManagerService) {
-    }
+        private dialogRef: MatDialogRef<PropertyManager>,
+        private uiService: UiService
+    ) { }
 
     ngOnInit(): void {
         this.managerForm = new FormGroup({
@@ -31,20 +32,17 @@ export class AddPropertyManagerComponent implements OnInit {
         });
     }
 
-    onUploadFinished(imageUrl: string) {
-            this.imageUrl = imageUrl;
-    }
-
     onSubmit() {
-        const manager = this.managerForm.value;
-        manager.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
-        // Edit Steps
-        if (this.data?.id) {
-            this.propertyManagerService.editPropertyManager(
-                {...manager, id: this.data.id, userId: this.data.userId}
-            );
-        } else {
-            this.propertyManagerService.addPropertyManager(manager);
-        }
+        this.uiService.set({ 
+            ...this.managerForm.value,
+            imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
+            id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
+            created: this.data?.created ? this.data.created : new Date(),
+            lastUpdated: new Date(),
+            userId: localStorage.getItem('userId')
+        }, this.propertyManagerPath).then(() => {
+            this.dialogRef.close();
+        });
+
     }
 }

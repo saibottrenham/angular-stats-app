@@ -20,11 +20,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.reducer';
-import { PropertyManagerService } from './property-manager/property-manager.service';
-import { PropertyService } from './property/property.service';
-import { TennantService } from './tennant/tennant.service';
-import { PropertyGroupService } from './property-group/property-group.service';
-import { CostService } from './analytics/cost/cost.service';
 import { CompressImageService } from './shared/compress-image.service';
 
 
@@ -51,12 +46,7 @@ import { CompressImageService } from './shared/compress-image.service';
   ],
   providers: [
     AuthService, 
-    UiService, 
-    PropertyManagerService, 
-    PropertyService,
-    PropertyGroupService,
-    CostService,
-    TennantService,
+    UiService,
     CompressImageService
   ],
   bootstrap: [AppComponent]

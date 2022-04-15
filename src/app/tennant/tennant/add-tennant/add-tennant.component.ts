@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Tennant } from '../../tennant.model';
-import { TennantService } from '../../tennant.service';
+import { UiService } from '../../../shared/ui.service';
 
 @Component({
     selector: 'app-add-property-manager',
@@ -18,8 +18,9 @@ export class AddTennantComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Tennant,
-        private tennantService: TennantService) {
-    }
+        private uiService: UiService,
+        public dialogRef: MatDialogRef<Tennant>,
+    ) {  }
 
     ngOnInit(): void {
         this.tennantForm = new FormGroup({
@@ -32,17 +33,16 @@ export class AddTennantComponent implements OnInit {
     }
 
     onSubmit() {
-        const tennant = this.tennantForm.value;
-        tennant.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
-        // Edit Steps
-        if (this.data?.id) {
-            this.tennantService.editTennant(
-                {...tennant, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
-            );
-        } else {
-            tennant.created = new Date();
-            tennant.lastUpdated = new Date();
-            this.tennantService.addTennant(tennant);
+        const newTennant = {
+            ...this.tennantForm.value,
+            imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
+            id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
+            created: this.data?.created ? this.data.created : new Date(),
+            lastUpdated: new Date(),
+            userId: localStorage.getItem('userId')
         }
+        this.uiService.set(newTennant, this.tennantPath).then(() => {
+            this.dialogRef.close(newTennant);
+        });
     }
 }

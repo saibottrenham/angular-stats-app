@@ -24,51 +24,87 @@
               <mat-label>Price</mat-label>
               <input matInput formControlName="price" placeholder="Price" required>
             </mat-form-field>
+            <div class="table-container" >
+              <app-shared-table 
+                [dataSource]="tableTennants"
+                [columnsToDisplay]="['name', 'address', 'mobile', 'email']"
+                (removeEmitter)="removeTennantFromProperty($event)"
+                (editEmitter)="editTennant($event)"
+                (deleteEmitter)="delete($event, tennantsPath)"
+              ></app-shared-table>
+            </div>
             <mat-form-field appearance="standard">
               <mat-label>Tennants</mat-label>
-              <mat-chip-list #tennantsList aria-label="Tenant selection">
-                <mat-chip
-                  *ngFor="let tennant of tennants"
-                  (removed)="removeTennant(tennant)"
-                  >
-                  {{tennant.name}}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
                 <input
-                  placeholder="Add a Tennant"
-                  #tennantInput
+                  placeholder="Select a Tennant"
+                  aria-label="Select a Tennant"
+                  matInput
                   [formControl]="tennantCtrl"
                   [matAutocomplete]="tennant"
-                  [matChipInputFor]="tennantsList"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  >
-              </mat-chip-list>
-              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="selectTennant($event)">
+                  #tennantTrigger="matAutocompleteTrigger"
+                  (click)="tennantTrigger.openPanel()"
+                 >
+                 <button 
+                  *ngIf="tennantTrigger.panelOpen"
+                  title="close tennant autofill window"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="close tennant autocomplete"
+                  (click)="tennantTrigger.closePanel(); $event.stopPropagation()"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                <button 
+                  title="Add a new Tennant"
+                  *ngIf="!tennantTrigger.panelOpen"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="add Tennant"
+                 (click)="addTennant(); $event.stopPropagation()">
+                 <mat-icon>add</mat-icon>
+                </button>
+              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="addTennantToProperty($event.option.value)">
                 <mat-option *ngFor="let tennant of filteredTennants | async" [value]="tennant">
                   {{tennant.name}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
+            <div class="table-container" >
+              <app-shared-table 
+                [dataSource]="tablePropertyManagers" 
+                [columnsToDisplay]="['name', 'address', 'mobile', 'email']"
+                (removeEmitter)="removePropertyManageFromProperty($event)"
+                (editEmitter)="editPropertyManager($event)"
+                (deleteEmitter)="delete($event, propertyManagerPath)"
+              >
+              </app-shared-table>
+            </div>
             <mat-form-field appearance="standard">
-              <mat-label>Property Managers</mat-label>
-              <mat-chip-list #propertyManagersList aria-label="Property Manager selection">
-                <mat-chip
-                  *ngFor="let propertyManager of propertyManagers"
-                  (removed)="removePropertyManager(propertyManager)"
-                  >
-                  {{propertyManager.name}}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input
-                  placeholder="Add a Property Manager"
-                  #propertyManagerInput
-                  [formControl]="propertyManagerCtrl"
-                  [matAutocomplete]="propertyManagerAuto"
-                  [matChipInputFor]="propertyManagersList"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  >
-              </mat-chip-list>
-              <mat-autocomplete #propertyManagerAuto="matAutocomplete" (optionSelected)="selectPropertyManager($event)">
+              <mat-label>Add Poperty Manager</mat-label>
+              <input type="text"
+                     placeholder="Add a Property Manager"
+                     aria-label="add a Property Manager input"
+                     matInput
+                     [formControl]="propertyManagerCtrl"
+                     [matAutocomplete]="propertyManager"
+                     #propertyManager="matAutocompleteTrigger"
+                     (click)="propertyManager.openPanel()"
+              >
+              <button 
+                title="Close Property Manager autofill window"
+                *ngIf="propertyManager.panelOpen"
+                type="button" matSuffix mat-icon-button
+                color="primary" aria-label="close property manager autocomplete"
+                (click)="propertyManager.closePanel(); $event.stopPropagation()">
+                <mat-icon>cancel</mat-icon>
+             </button>
+              <button 
+                title="Add a new Property Mangaer"
+                *ngIf="!propertyManager.panelOpen"
+                type="button" matSuffix mat-icon-button
+                color="primary" aria-label="add property manager"
+                (click)="addPropertyManager(); $event.stopPropagation()">
+                <mat-icon>add</mat-icon>
+             </button>
+              <mat-autocomplete #propertyManager="matAutocomplete" (optionSelected)="addPropertyManagerToProperty($event.option.value)">
                 <mat-option *ngFor="let propertyManager of filteredPropertyManagers | async" [value]="propertyManager">
                   {{propertyManager.name}}
                 </mat-option>

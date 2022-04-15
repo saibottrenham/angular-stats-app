@@ -22,7 +22,7 @@
                 [columnsToDisplay]="['name', 'address', 'removeable', 'actions']"
                 (removeEmitter)="removePropertyFromPropertyGroup($event)"
                 (editEmitter)="editProperty($event)"
-                (deleteEmitter)="deleteProperty($event)"
+                (deleteEmitter)="delete($event, propertisPath)"
               ></app-shared-table>
             </div>
             <mat-form-field appearance="standard">
@@ -65,7 +65,7 @@
                 [columnsToDisplay]="['name', 'amount', 'frequency', 'removeable', 'actions']"
                 (removeEmitter)="removeCostFromPropertyGroup($event)"
                 (editEmitter)="editCost($event)"
-                (deleteEmitter)="deleteCost($event)"
+                (deleteEmitter)="delete($event, costsPath)"
               >
               </app-shared-table>
             </div>

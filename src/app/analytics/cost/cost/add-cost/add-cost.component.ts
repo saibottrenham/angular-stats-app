@@ -2,7 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Cost } from '../../cost.model';
-import { CostService } from '../../cost.service';
+import { UiService } from '../../../../shared/ui.service';
+import { costsPath } from '../../../../shared/paths';
 
 @Component({
     selector: 'app-add-cost',
@@ -13,12 +14,13 @@ export class AddCostComponent implements OnInit {
     imageUrl: string = null;
     costForm: FormGroup;
     cost: Cost;
-    costPath = 'Cost';
     uploadProgress = 0;
+    costsPath = costsPath
+    
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Cost,
-        private costService: CostService,
+        private uiService: UiService,
         public dialogRef: MatDialogRef<AddCostComponent>,) {
 
     }
@@ -33,21 +35,16 @@ export class AddCostComponent implements OnInit {
     }
 
     onSubmit() {
-        const cost = this.costForm.value;
-        cost.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
-        // Edit Steps
-        if (!this.data?.id) {
-            const id = this.costService.createCostId();
-            const newCost = {...cost, id: id, created: new Date(), lastUpdated: new Date(), userId: localStorage.getItem('userId')}
-            this.costService.createCost(id, newCost).then(() => {
-                this.dialogRef.close(newCost);
-            });
-        } else {
-            this.costService.editCost(
-                {...cost, id: this.data.id, lastUpdated: new Date()}
-            ).then(() => {
-                this.dialogRef.close();
-            }); 
-        }
+        this.uiService.set({
+            ...this.costForm.value,
+            imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
+            id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
+            created: this.data?.created ? this.data.created : new Date(),
+            lastUpdated: new Date(),
+            userId: localStorage.getItem('userId')
+        }, costsPath).then(() => {
+            this.dialogRef.close();
+        });
+
     }
 }

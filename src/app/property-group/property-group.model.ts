@@ -1,15 +1,7 @@
-import { Observable } from 'rxjs';
-import { Cost } from '../analytics/cost/cost.model';
-import { Property } from '../property/property.model';
+import { BaseModel } from "../shared/common-model";
 
-export interface PropertyGroup {
-    id: string;
-    userId?: string;
-    name: string;
+export interface PropertyGroup extends BaseModel {
     notes: string;
-    imageUrl: string;
     costs?: string[];
     properties?: string[];
-    created?: Date;
-    lastUpdated?: Date;
 }

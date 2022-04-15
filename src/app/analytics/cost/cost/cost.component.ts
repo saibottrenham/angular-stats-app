@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCostComponent } from './add-cost/add-cost.component';
-import { CostService } from '../cost.service';
 import { Cost } from '../cost.model';
+import { UiService } from '../../../shared/ui.service';
+import { costsPath } from '../../../shared/paths';
 
 
 @Component({
@@ -17,11 +18,11 @@ export class CostComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private costService: CostService,
+    private uiService: UiService,
 ) { }
 
   ngOnInit(): void {
-    this.subs.push(this.costService.fetchCosts().subscribe(res => {
+    this.subs.push(this.uiService.get(costsPath).subscribe(res => {
       this.costs = res;
       this.loading = false;
     }));
@@ -46,7 +47,7 @@ export class CostComponent implements OnInit {
   }
 
   deleteCost(e: Cost) {
-    this.costService.deleteCost(e);
+    this.uiService.delete(e, costsPath);
   }
 
 }

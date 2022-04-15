@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTennantComponent } from './add-tennant/add-tennant.component';
-import { TennantService } from '../tennant.service';
-import * as fromRoot from '../../app.reducer';
-import * as fromTennant from '../tennant.reducer';
-import * as fromUI from '../../shared/ui.reducer';
-import { Observable } from 'rxjs';
-import { Tennant } from '../tennant.model';
-import { Store } from '@ngrx/store';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Tennant } from '../tennant.model';;
+import { UiService } from '../../shared/ui.service';
+import { tennantsPath } from '../../shared/paths';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -17,41 +13,43 @@ import { AngularFireAuth } from '@angular/fire/auth';
   styleUrls: ['./tennant.component.scss']
 })
 export class TennantComponent implements OnInit {
-  tennants$: Observable<Tennant[]> = null;
-  isLoading$: Observable<boolean> = null;
+  tennants: Tennant[] = []
+  loading: boolean = true;
+  sub: Subscription;
 
   constructor(
     private dialog: MatDialog,
-    private afAuth: AngularFireAuth,
-    private tennantService: TennantService,
-    private store: Store<fromTennant.State>,
-    private uiStore: Store<fromUI.State>
+    private uiService: UiService,
 ) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
-    this.tennants$ = this.store.select(fromTennant.getTennants);
-    this.tennantService.fetchTennants();
+    this.sub = this.uiService.get(tennantsPath).subscribe(
+      (res: Tennant[]) => {
+        this.tennants = res;
+        this.loading = false;
+      }
+    );
+  }
+
+  onDestroy() {
+    this.sub.unsubscribe();
   }
 
   addTennant() {
-    const dialogRef = this.dialog.open(AddTennantComponent, {
+    this.dialog.open(AddTennantComponent, {
       width: '600px',
     });
-    dialogRef.afterClosed().subscribe(() => this.tennantService.fetchTennants());
   }
 
   editTennant(e: Tennant) {
-    const dialogRef = this.dialog.open(AddTennantComponent, {
+    this.dialog.open(AddTennantComponent, {
       width: '600px',
       data: e
     });
-    dialogRef.afterClosed().subscribe(() => this.tennantService.fetchTennants());
   }
 
   deleteTennant(e: Tennant) {
-    this.tennantService.deleteTennant(e);
-    this.tennantService.fetchTennants();
+    this.uiService.delete(e, tennantsPath);
   }
 
 }

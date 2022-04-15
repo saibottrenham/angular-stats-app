@@ -1,13 +1,17 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { map, Observable, startWith } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { map, Observable, startWith, Subscription } from 'rxjs';
 import { Property } from '../../property.model';
-import { PropertyService } from '../../property.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Tennant } from '../../../tennant/tennant.model';
 import { PropertyManager } from '../../../property-manager/property-manager.model';
+import { UiService } from '../../../shared/ui.service';
+import { filter } from '../../../shared/filter';
+import { BaseModel } from '../../../shared/common-model';
+import { propertyManagerPath, tennantsPath } from '../../../shared/paths';
+import { AddTennantComponent } from '../../../tennant/tennant/add-tennant/add-tennant.component';
+import { AddPropertyManagerComponent } from '../../../property-manager/property-manager/add-property-manager/add-property-manager.component';
 
 @Component({
     selector: 'app-add-house',
@@ -24,103 +28,145 @@ export class AddPropertyComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     tennantCtrl = new FormControl();
     propertyManagerCtrl = new FormControl();
-    filteredTennants: Observable<Tennant[]>;
-    filteredPropertyManagers: Observable<PropertyManager[]>;
-    tennants: Tennant[] = [];
+    filteredTennants: Observable<BaseModel[]>;
+    filteredPropertyManagers: Observable<BaseModel[]>;
     propertyManagers: Tennant[] = [];
-    allTennants: Tennant[] = [];
+    tablePropertyManagers: PropertyManager[] = [];
     allPropertyManagers: PropertyManager[] = [];
+    tennants: Tennant[] = [];
+    tableTennants: Tennant[] = [];
+    allTennants: Tennant[] = [];
+    subs: Subscription[] = [];
+    tennantsPath = tennantsPath;
+    propertyManagerPath = propertyManagerPath;
 
   @ViewChild('tennantInput') tennantInput: ElementRef<HTMLInputElement>;
   @ViewChild('propertyManagerInput') propertyManagerInput: ElementRef<HTMLInputElement>;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Property,
-        private propertyService: PropertyService,
-        private fb: FormBuilder
-        ) { 
+        private dialog: MatDialog,
+        private uiService: UiService,
+        public dialogRef: MatDialogRef<AddPropertyComponent>,
+        ) {  
 
-          this.filteredTennants = this.tennantCtrl.valueChanges.pipe(
+        this.filteredTennants = this.tennantCtrl.valueChanges.pipe(
+          startWith(null),
+          map((tennant: string | null) => filter(tennant, this.tennants, this.data?.tennants)));
+        this.filteredPropertyManagers = this.propertyManagerCtrl.valueChanges.pipe(
             startWith(null),
-            map((tennant: string | null) => tennant ? this._filter(tennant, this.allTennants) : this.allTennants.slice()));
-          this.filteredPropertyManagers = this.propertyManagerCtrl.valueChanges.pipe(
-              startWith(null),
-              map((propertyManager: string | null) => propertyManager ?
-               this._filterPropertyManager(propertyManager, this.allPropertyManagers) : this.allPropertyManagers.slice()));
+            map((propertyManager: string | null) => filter(propertyManager, this.propertyManagers, this.data?.propertyManagers)));
+        
         }
 
     ngOnInit(): void {
 
-        this.propertyForm = this.fb.group({
-          name: new FormControl(this.data?.name, {validators: [Validators.required]}),
-          address: new FormControl(this.data?.address, {validators: [Validators.required]}),
-          notes: new FormControl(this.data?.notes, {validators: [Validators.required]}),
-          price: new FormControl(this.data?.price, {validators: [Validators.required]}),
-          rentedOut: new FormControl(this.data?.rentedOut, {validators: [Validators.required]}),
-          tennants: this.fb.array(this.tennants),
-          propertyManagers: this.fb.array(this.propertyManagers)
-        });
+      this.subs.push(this.uiService.get(tennantsPath).subscribe(tennants => {
+        console.log(tennants);
+        this.tennants = tennants.filter(tennant => !this.data?.tennants || !this.data.tennants.includes(tennant.id));
+        this.tableTennants = this.data?.tennants ? this.data.tennants.map(id => tennants.find(tennant => tennant.id === id)) : [];
+        this.allTennants = tennants;
+      }));
+      this.subs.push(this.uiService.get(propertyManagerPath).subscribe(propertyManagers => {
+        this.propertyManagers = propertyManagers.filter(propertyManager => !this.data?.propertyManagers || !this.data.propertyManagers.includes(propertyManager.id));
+        this.tablePropertyManagers = this.data?.propertyManagers ? this.data.propertyManagers.map(id => propertyManagers.find(propertyManager => propertyManager.id === id)) : [];
+        this.allPropertyManagers = propertyManagers;
+      }));
+
+      this.propertyForm = new FormGroup({
+        name: new FormControl(this.data?.name, [Validators.required]),
+        address: new FormControl(this.data?.address, [Validators.required]),
+        notes: new FormControl(this.data?.notes, [Validators.required]),
+        imageUrl: new FormControl(this.data?.imageUrl),
+        price: new FormControl(this.data?.price, [Validators.required]),
+        rentedOut: new FormControl(this.data?.rentedOut, [Validators.required])
+      });
+    }  
+
+    onDestroy() {
+      this.subs.forEach(sub => sub.unsubscribe());
     }
 
     onSubmit() {
-      const property = this.propertyForm.value;
-      property.tennants = this.tennants.map(tennant => tennant.id);
-      property.propertyManagers = this.propertyManagers.map(propertyManager => propertyManager.id);
+      this.uiService.set({
+        ...this.propertyForm.value,
+        imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
+        id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
+        lastUpdated: new Date(),
+        createdDate: this.data?.created ? this.data.created : new Date(),
+        tennants: this.data?.tennants ? this.data.tennants : [],
+        propertyManager: this.data?.propertyManagers ? this.data.propertyManagers : [],
+        userId: localStorage.getItem('userId')
+      }, this.propertyPath).then(() => {
+        this.dialogRef.close();
+      })
+    }
 
-      property.imageUrl = this.imageUrl ? this.imageUrl : this.data?.imageUrl || null;
-      // Edit Steps
-      if (this.data?.id) {
-          this.propertyService.editProperty(
-              {...property, id: this.data.id, userId: this.data.userId, lastUpdated: new Date()}
-          );
-      } else {
-          property.created = new Date();
-          property.lastUpdated = new Date();
-          this.propertyService.addProperty(property);
-      }
-    }
-  
-    removeTennant(tennant: Tennant): void {
-      const index = this.tennants.indexOf(tennant);
-      if (index >= 0) {
-        this.tennants.splice(index, 1);
-      }
-      this.allTennants.push(tennant);
-    }
-  
-    selectTennant(event: MatAutocompleteSelectedEvent): void {
-      this.tennants.push(event.option.value);
-      this.allTennants = this.allTennants.filter(item => {
-        return this.tennants.indexOf(item) === -1;
+    addTennant() {
+      const dialogref = this.dialog.open(AddTennantComponent, {
+        width: '100%',
+        data: {}
       });
-      this.tennantInput.nativeElement.value = '';
-      this.tennantCtrl.setValue(null);
+      dialogref.afterClosed().subscribe(res => {
+        if (res) {
+          this.data.tennants = this.data.tennants.length ? [...this.data.tennants, res.id] : [res.id];
+          this.tableTennants = this.tableTennants.length ? [...this.tableTennants, res] : [res];
+        }}
+      )
     }
 
-    removePropertyManager(propertyManager: PropertyManager): void {
-      const index = this.propertyManagers.indexOf(propertyManager);
-      if (index >= 0) {
-        this.propertyManagers.splice(index, 1);
-      }
-      this.allPropertyManagers.push(propertyManager);
-    }
-  
-    selectPropertyManager(event: MatAutocompleteSelectedEvent): void {
-      this.propertyManagers.push(event.option.value);
-      this.allPropertyManagers = this.allPropertyManagers.filter(item => {
-        return this.propertyManagers.indexOf(item) === -1;
+    editTennant(tennant: Tennant): void {
+      this.dialog.open(AddTennantComponent, {
+        width: '100%',
+        data: tennant
       });
-      this.propertyManagerInput.nativeElement.value = '';
-      this.propertyManagerCtrl.setValue(null);
-    }
-  
-    private _filter(value: string, filterArray = []): Tennant[] {
-      const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-      return filterArray.filter(tennant => tennant.name.toLowerCase().includes(filterValue));
     }
 
-    private _filterPropertyManager(value: string, filterArray = []): PropertyManager[] {
-      const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-      return filterArray.filter(propertyManager => propertyManager.name.toLowerCase().includes(filterValue));
+    addPropertyManager() {
+      this.dialog.open(AddPropertyManagerComponent, {
+        width: '100%',
+          data: {}
+        });
+      }
+  
+    editPropertyManager(propertyManager: PropertyManager): void {
+      this.dialog.open(AddPropertyManagerComponent, {
+        width: '100%',
+        data: propertyManager
+      });
+    }
+
+    delete(item: any, path: string): void {
+      this.uiService.delete(item, path).then(() => {
+        this.removeTennantFromProperty(item);
+      });
+    }
+
+    addTennantToProperty(tennant: Tennant) {
+      this.uiService.addToObjectArray(this.data, tennant, 'tennants', tennantsPath, this.tennantCtrl).then(() => {
+        this.tableTennants.push(tennant);
+        this.tennants = this.tennants.filter(tennant => tennant.id !== tennant.id);
+      });
+    }
+
+    removeTennantFromProperty(tennant: Tennant) {
+      this.uiService.removeFromObjectArray(this.data, tennant, 'tennants', tennantsPath).then(() => {
+        this.tennants.push(tennant);
+        this.tableTennants = this.tableTennants.filter(tennant => tennant.id !== tennant.id);
+      });
+    }
+
+    addPropertyManagerToProperty(propertyManager: PropertyManager) {
+      this.uiService.addToObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath, this.propertyManagerCtrl).then(() => {
+        this.tablePropertyManagers.push(propertyManager);
+        this.propertyManagers = this.propertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
+      });
+    }
+
+    removePropertyManageFromProperty(propertyManager: PropertyManager) {
+      this.uiService.removeFromObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath).then(() => {
+        this.propertyManagers.push(propertyManager);
+        this.tablePropertyManagers = this.tablePropertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
+      });
     }
   }

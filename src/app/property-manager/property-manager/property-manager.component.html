@@ -1,21 +1,21 @@
-<section class="base-section" fxLayout="row" fxLayoutAlign="center center" *ngIf="(isLoading$ | async)">
+<section class="base-section" fxLayout="row" fxLayoutAlign="center center" *ngIf="loading">
     <mat-spinner diameter="50"></mat-spinner>
 </section>
-<div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!(isLoading$ | async)">
-    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let manager of propertyManagers$ | async">
+<div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!loading">
+    <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyManager of propertyManagers">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>{{manager.name}}</mat-card-title>
-                <mat-card-subtitle>{{manager.email}}</mat-card-subtitle>
+                <mat-card-title>{{propertyManager.name}}</mat-card-title>
+                <mat-card-subtitle>{{propertyManager.email}}</mat-card-subtitle>
             </mat-card-header>
-            <div class="image-container" fxLayoutAlign="center" *ngIf="manager.imageUrl">
-                <img [src]="manager.imageUrl" alt="{{ manager.name }}">
+            <div class="image-container" fxLayoutAlign="center" *ngIf="propertyManager.imageUrl">
+                <img [src]="propertyManager.imageUrl" alt="{{ propertyManager.name }}">
             </div>
             <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager(manager)">
+                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager(propertyManager)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deleteManager(manager)">
+                <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deleteManager(propertyManager)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-card-actions>

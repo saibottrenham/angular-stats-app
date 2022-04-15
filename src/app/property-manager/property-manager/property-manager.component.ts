@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddPropertyManagerComponent } from './add-property-manager/add-property-manager.component';
-import { PropertyManagerService } from '../property-manager.service';
-import * as fromRoot from '../../app.reducer';
-import * as fromPropertyManager from '../property-manager.reducer';
-import * as fromUI from '../../shared/ui.reducer';
-import { Observable } from 'rxjs';
 import { PropertyManager } from '../property-manager.model';
-import { Store } from '@ngrx/store';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { UiService } from '../../shared/ui.service';
+import { propertyManagerPath } from '../../shared/paths';
 
 @Component({
   selector: 'app-property-manager',
@@ -16,40 +11,39 @@ import { AngularFireAuth } from '@angular/fire/auth';
   styleUrls: ['./property-manager.component.scss']
 })
 export class PropertyManagerComponent implements OnInit {
-  propertyManagers$: Observable<PropertyManager[]> = null;
-  isLoading$: Observable<boolean> = null;
+  propertyManagers: PropertyManager[] = [];
+  loading: boolean = true;
 
   constructor(
       private dialog: MatDialog,
-      private propertyManagerService: PropertyManagerService,
-      private store: Store<fromPropertyManager.State>,
-      private uiStore: Store<fromUI.State>
+      public dialogRef: MatDialogRef<PropertyManager>,
+      private uiService: UiService,
   ) { }
 
   ngOnInit(): void {
-    this.isLoading$ = this.uiStore.select(fromRoot.getIsLoading);
-    this.propertyManagers$ = this.store.select(fromPropertyManager.getPropertyManagers);
-    this.propertyManagerService.fetchPropertyManagers();
+    this.uiService.get(propertyManagerPath).subscribe(
+      res => {
+        this.propertyManagers = res;
+        this.loading = false;
+      }
+    )
   }
 
   addManager() {
-    const dialogRef = this.dialog.open(AddPropertyManagerComponent, {
+    this.dialog.open(AddPropertyManagerComponent, {
       width: '600px',
     });
-    dialogRef.afterClosed().subscribe(() => this.propertyManagerService.fetchPropertyManagers());
   }
 
   editManager(e: PropertyManager) {
-    const dialogRef = this.dialog.open(AddPropertyManagerComponent, {
+    this.dialog.open(AddPropertyManagerComponent, {
       width: '600px',
       data: e
     });
-    dialogRef.afterClosed().subscribe(() => this.propertyManagerService.fetchPropertyManagers());
   }
 
   deleteManager(e: PropertyManager) {
-    this.propertyManagerService.deletePropertyManager(e);
-    this.propertyManagerService.fetchPropertyManagers();
+    this.uiService.delete(e, propertyManagerPath);
   }
 
 }

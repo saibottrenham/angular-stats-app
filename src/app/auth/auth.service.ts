@@ -7,14 +7,12 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
-import { PropertyManagerService } from '../property-manager/property-manager.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
-    private propertyManagerService: PropertyManagerService,
     private uiService: UiService,
     private store: Store<fromRoot.State>
   ) {}
@@ -27,7 +25,6 @@ export class AuthService {
         this.store.dispatch(new Auth.SetAuthenticated());
         this.router.navigate(['/propertyGroups']);
       } else {
-        this.propertyManagerService.cancelSubscriptions();
         this.store.dispatch(new Auth.SetUnauthenticated());
         this.router.navigate(['/login']);
       }
@@ -61,5 +58,9 @@ export class AuthService {
   logout() {
     localStorage.setItem('userId', '');
     this.afAuth.signOut();
+  }
+
+  redirectToLogin() {
+    this.router.navigate(['/login']);
   }
 }
