@@ -43,7 +43,7 @@ export class PropertyComponent implements OnInit {
   editPoperty(e: Property) {
     this.dialog.open(AddPropertyComponent, {
       width: '600px',
-      data: e
+      data: {...e}
     });
   }
 

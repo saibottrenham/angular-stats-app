@@ -2,8 +2,8 @@
     <mat-spinner diameter="50"></mat-spinner>
 </section>
 <div class="custom-mat-card" fxLayout="row wrap" fxLayoutGap="16px grid">
-    <ng-container *ngIf="loading">
-        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroups | async">
+    <ng-container *ngIf="!loading">
+        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" *ngFor="let propertyGroup of propertyGroups">
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>{{propertyGroup.name}}</mat-card-title>

@@ -55,7 +55,7 @@
                 </button>
               <mat-autocomplete #property="matAutocomplete" (optionSelected)="addPropertyToPropertyGroup($event.option.value)">
                 <mat-option *ngFor="let property of filteredProperties | async" [value]="property">
-                  {{property.name}}
+                  {{property?.name}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -96,9 +96,11 @@
                 (click)="addCost(); $event.stopPropagation()">
                 <mat-icon>add</mat-icon>
              </button>
-              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="addCostToPropertyGroup($event.option.value)">
+              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="addCostToPropertyGroup(
+                  $event.option.value
+                )">
                 <mat-option *ngFor="let cost of filteredCosts | async" [value]="cost">
-                  {{cost.name}}
+                  {{cost?.name}}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>

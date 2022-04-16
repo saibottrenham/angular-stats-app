@@ -11,7 +11,7 @@ import { PropertyModule } from '../property/property.module';
 @NgModule({
   declarations: [
     PropertyGroupComponent,
-    AddPropertyGroupComponent,
+    AddPropertyGroupComponent
   ],
   imports: [
     SharedModule,

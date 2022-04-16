@@ -62,14 +62,13 @@ export class AddPropertyComponent implements OnInit {
     ngOnInit(): void {
 
       this.subs.push(this.uiService.get(tennantsPath).subscribe(tennants => {
-        console.log(tennants);
-        this.tennants = tennants.filter(tennant => !this.data?.tennants || !this.data.tennants.includes(tennant.id));
-        this.tableTennants = this.data?.tennants ? this.data.tennants.map(id => tennants.find(tennant => tennant.id === id)) : [];
+        this.tennants = tennants.filter(tennant => !this.data?.tennants || !this.data.tennants.includes(tennant.id)) || [];
+        this.tableTennants = this.data?.tennants.length ? this.data.tennants.map(id => tennants.find(tennant => tennant.id === id)) : [];
         this.allTennants = tennants;
       }));
       this.subs.push(this.uiService.get(propertyManagerPath).subscribe(propertyManagers => {
-        this.propertyManagers = propertyManagers.filter(propertyManager => !this.data?.propertyManagers || !this.data.propertyManagers.includes(propertyManager.id));
-        this.tablePropertyManagers = this.data?.propertyManagers ? this.data.propertyManagers.map(id => propertyManagers.find(propertyManager => propertyManager.id === id)) : [];
+        this.propertyManagers = propertyManagers.filter(propertyManager => !this.data?.propertyManagers || !this.data.propertyManagers.includes(propertyManager.id)) || [];
+        this.tablePropertyManagers = this.data?.propertyManagers.length ? this.data.propertyManagers.map(id => propertyManagers.find(propertyManager => propertyManager.id === id)) : [];
         this.allPropertyManagers = propertyManagers;
       }));
 
@@ -142,17 +141,22 @@ export class AddPropertyComponent implements OnInit {
       });
     }
 
-    addTennantToProperty(tennant: Tennant) {
-      this.uiService.addToObjectArray(this.data, tennant, 'tennants', tennantsPath, this.tennantCtrl).then(() => {
-        this.tableTennants.push(tennant);
-        this.tennants = this.tennants.filter(tennant => tennant.id !== tennant.id);
+    addTennantToProperty(element: any, tableList: any, list: any, attribute: string, path: string, ctrl): void {
+      tableList.push(element);
+      list = list.filter(listElement => listElement.id !== element.id);
+      this.uiService.addToObjectArray(this.data, element, attribute, path, ctrl).then(() => {}, err => {
+        console.log(err);
+        list.push(element);
+        tableList = tableList.filter(listElement => listElement.id !== element.id);
       });
     }
 
     removeTennantFromProperty(tennant: Tennant) {
+      this.tennants.push(tennant);
+      this.tableTennants = this.tableTennants.filter(tennant => tennant.id !== tennant.id);
       this.uiService.removeFromObjectArray(this.data, tennant, 'tennants', tennantsPath).then(() => {
-        this.tennants.push(tennant);
-        this.tableTennants = this.tableTennants.filter(tennant => tennant.id !== tennant.id);
+        this.tableTennants.push(tennant);
+        this.tennants = this.tennants.filter(tennant => tennant.id !== tennant.id);
       });
     }
 

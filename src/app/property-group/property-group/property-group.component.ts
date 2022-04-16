@@ -4,7 +4,7 @@ import { AddPropertyGroupComponent } from './add-property-group/add-property-gro
 import { PropertyGroup } from '../property-group.model';
 import { UiService } from '../../shared/ui.service';
 import { propertiesGroupPath } from '../../shared/paths';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-property',
@@ -26,7 +26,6 @@ export class PropertyGroupComponent implements OnInit, OnDestroy {
     this.sub = this.uiService.get(propertiesGroupPath)
     .subscribe(
       res => {
-        console.log(res);
         this.propertyGroups = res;
         this.loading = false;
       }
@@ -40,14 +39,14 @@ export class PropertyGroupComponent implements OnInit, OnDestroy {
   addPropertyGroup() {
     this.dialog.open(AddPropertyGroupComponent, {
       width: '100%',
-      data: {}
+      data: null
     });
   }
 
   editPopertyGroup(e: PropertyGroup) {
     this.dialog.open(AddPropertyGroupComponent, {
       width: '100%',
-      data: e
+      data: {...e}
     });
   }
 

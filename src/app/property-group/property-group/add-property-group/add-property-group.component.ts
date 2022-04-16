@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith } from 'rxjs';
 import { PropertyGroup } from '../../property-group.model';
@@ -51,23 +51,27 @@ export class AddPropertyGroupComponent implements OnInit {
 
         this.filteredProperties = this.propertyCtrl.valueChanges.pipe(
           startWith(null),
-          map((property: string | null) => filter(property, this.properties, this.data?.properties)));
+          map((property: string | null) => filter(property, this.properties, this.data && this.data?.properties || [])));
         this.filteredCosts = this.costCtrl.valueChanges.pipe(
             startWith(null),
-            map((cost: string | null) => filter(cost, this.costs, this.data?.costs)));
+            map((cost: string | null) => filter(cost, this.costs, this.data && this.data?.costs || [])));
         
         }
 
     ngOnInit(): void {
 
       this.subs.push(this.uiService.get(propertiesPath).subscribe(properties => {
-        this.properties = properties.filter(property => !this.data?.properties || !this.data.properties.includes(property.id));
-        this.tableProperties = this.data?.properties ? this.data.properties.map(id => properties.find(property => property.id === id)) : [];
+        this.properties = properties.filter(property => !this.data?.properties?.length || !this.data.properties.includes(property.id)) || [];
+        this.tableProperties = this.data?.properties?.length ? this.data?.properties.map(id => properties.find(property => property.id === id)).filter(
+          property => property !== undefined
+        ) : [];
         this.allProperties = properties;
       }));
       this.subs.push(this.uiService.get(costsPath).subscribe(costs => {
-        this.costs = costs.filter(cost => !this.data?.costs || !this.data.costs.includes(cost.id));
-        this.tableCosts = this.data?.costs ? this.data.costs.map(id => costs.find(cost => cost.id === id)) : [];
+        this.costs = costs.filter(cost => !this.data?.costs.length || !this.data.costs.includes(cost.id)) || [];
+        this.tableCosts = this.data?.costs?.length ? this.data.costs.map(id => costs.find(cost => cost.id === id)).filter(
+          cost => cost !== undefined
+        ) : [];
         this.allCosts = costs;
       }));
 
@@ -88,8 +92,8 @@ export class AddPropertyGroupComponent implements OnInit {
         id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
         lastUpdated: new Date(),
         createdDate: this.data?.created ? this.data.created : new Date(),
-        properties: this.data?.properties ? this.data.properties : [],
-        costs: this.data?.costs ? this.data.costs : [],
+        properties: this.data?.properties?.length ? this.data.properties : [],
+        costs: this.data?.costs?.length ? this.data.costs : [],
         userId: localStorage.getItem('userId')
       }, this.propertyGroupPath).then(() => {
         this.dialogRef.close();
@@ -101,12 +105,9 @@ export class AddPropertyGroupComponent implements OnInit {
         width: '600px',
         data: {}
       });
-      dialogref.afterClosed().subscribe(res => {
-        if (res) {
-          this.data.costs = this.data.costs.length ? [...this.data.costs, res.id] : [res.id];
-          this.tableCosts = this.tableCosts.length ? [...this.tableCosts, res] : [res];
-        }}
-      )
+      dialogref.afterClosed().subscribe((cost: Cost) => {
+        if (cost) this.addCostToPropertyGroup(cost);
+      });
     }
 
     editCost(cost: Cost): void {
@@ -117,16 +118,19 @@ export class AddPropertyGroupComponent implements OnInit {
     }
 
     addProperty() {
-      this.dialog.open(AddPropertyComponent, {
+      const dialogref = this.dialog.open(AddPropertyComponent, {
           width: '600px',
           data: {}
         });
-      }
+      dialogref.afterClosed().subscribe((res: Property) => {
+        if (res) this.addPropertyToPropertyGroup(res);
+      });
+    }
   
     editProperty(property: Property): void {
       this.dialog.open(AddPropertyComponent, {
         width: '600px',
-        data: property
+        data: {...property}
       });
     }
 
@@ -136,73 +140,34 @@ export class AddPropertyGroupComponent implements OnInit {
       });
     }
 
-    addCostToPropertyGroup(cost: Cost) {
-      const costs = this.data?.costs.length ? [...this.data.costs, cost.id] : [cost.id];
-      this.data.costs = costs;
+    addCostToPropertyGroup(element: any): void {
       this.costCtrl.setValue(null);
-      this.uiService.set(
-        {
-          ...this.data,
-          costs: costs,
-          id: this.data.id,
-          userId: this.data.userId,
-          lastUpdated: new Date()
-        },
-        this.propertyGroupPath
-      ).then(() => {
-        this.tableCosts = [...this.tableCosts, cost];
+      this.uiService.addToObjectArray(this.data, element, 'costs', propertiesGroupPath, this.costCtrl).then(() => {
+        this.tableCosts = this.data.costs.map(id => this.allCosts.find(cost => cost.id === id)).filter(
+          cost => cost !== undefined
+          );
+        this.costs = this.allCosts.filter(cost => !this.data.costs.includes(cost.id));
       });
     }
 
     removeCostFromPropertyGroup(cost: Cost) {
-      const costs = this.data?.costs.length ? this.data.costs.filter(id => id !== cost.id) : [];
-      this.data.costs = costs;
-      this.uiService.set(
-        {
-          ...this.data,
-          costs: costs,
-          id: this.data.id,
-          userId: this.data.userId,
-          lastUpdated: new Date()
-        },
-        propertiesGroupPath
-      ).then(() => {
-        this.tableCosts = this.tableCosts.filter(item => item.id !== cost.id);
+      this.uiService.removeFromObjectArray(this.data, cost, 'costs', propertiesGroupPath).then(() => {
+        this.costs.push(cost);
+        this.tableCosts = this.tableCosts.filter(tableCost => tableCost.id !== cost.id);
       });
     }
 
     addPropertyToPropertyGroup(property: Property) {
-      const properties = this.data?.properties.length ? [...this.data.properties, property.id] : [property.id]
-      this.data.properties = properties;
-      this.propertyCtrl.setValue(null);
-      this.uiService.set(
-        {
-          ...this.data,
-          properties: properties,
-          id: this.data.id,
-          userId: this.data.userId,
-          lastUpdated: new Date()
-        },
-        this.propertyGroupPath
-      ).then(() => {
-        this.tableProperties = [...this.tableProperties, property];
+      this.uiService.addToObjectArray(this.data, property, 'properties', propertiesGroupPath, this.propertyCtrl).then(() => {
+        this.tableProperties.push(property);
+        this.properties = this.properties.filter(property => property.id !== property.id);
       });
     }
 
     removePropertyFromPropertyGroup(property: Property) {
-      const properties = this.data?.properties.length ? this.data?.properties.filter(id => id !== property.id) : [];
-      this.data.properties = properties;
-      this.uiService.set(
-        {
-          ...this.data,
-          properties: properties,
-          id: this.data.id,
-          userId: this.data.userId,
-          lastUpdated: new Date()
-        },
-        this.propertyGroupPath
-      ).then(() => {
-        this.tableProperties = this.tableProperties.filter(item => item.id !== property.id);
+      this.uiService.removeFromObjectArray(this.data, property, 'properties', propertiesGroupPath).then(() => {
+        this.properties.push(property);
+        this.tableProperties = this.tableProperties.filter(property => property.id !== property.id);
       });
     }
   }

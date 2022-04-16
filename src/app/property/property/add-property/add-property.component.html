@@ -61,7 +61,14 @@
                  (click)="addTennant(); $event.stopPropagation()">
                  <mat-icon>add</mat-icon>
                 </button>
-              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="addTennantToProperty($event.option.value)">
+              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="addTennantToProperty(
+                  $event.option.value,
+                  tableTennants, 
+                  tennants, 
+                  'tennants', 
+                  tennantsPath, 
+                  tennantCtrl
+                )">
                 <mat-option *ngFor="let tennant of filteredTennants | async" [value]="tennant">
                   {{tennant.name}}
                 </mat-option>

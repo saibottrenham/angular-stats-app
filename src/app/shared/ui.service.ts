@@ -49,15 +49,12 @@ export class UiService {
   }
 
   addToObjectArray(data: any, element: any, attribute: string, path: string, ctrl: FormControl) {
-    const newValues = data.getAttribute(attribute, []).length ? [...data.getAttribute(attribute), element.id] : [element.id]
-    data.setAttribute(attribute, newValues);
-    ctrl.setValue(null);
+    data[attribute] = data[attribute]?.length ? [...data[attribute], element.id] : [element.id];
     return this.set({...data, lastUpdated: new Date()}, path);
   }
 
   removeFromObjectArray(data: any, element: any, attribute: string, path: string) {
-    const newValues = data.getAttribute(attribute, []).length ? data.getAttribute(attribute).filter(id => id !== element.id) : [];
-    data.setAttribute(attribute, newValues);
+    data[attribute] = data[attribute]?.length ? data[attribute].filter(id => id !== element.id) : [];
     return this.set({...data, lastUpdated: new Date()}, path);
   }
   

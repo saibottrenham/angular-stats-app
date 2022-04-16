@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { BaseModel } from '../common-model';
 
@@ -27,6 +27,7 @@ export class SharedTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSource) {
       this.dataSource = changes.dataSource.currentValue;
+      console.log(this.dataSource);
     }
   }
 

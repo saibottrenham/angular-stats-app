@@ -35,15 +35,16 @@ export class AddCostComponent implements OnInit {
     }
 
     onSubmit() {
-        this.uiService.set({
+        const newCost = {
             ...this.costForm.value,
             imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
             id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
             created: this.data?.created ? this.data.created : new Date(),
             lastUpdated: new Date(),
             userId: localStorage.getItem('userId')
-        }, costsPath).then(() => {
-            this.dialogRef.close();
+        }
+        this.uiService.set(newCost, costsPath).then(() => {
+            this.dialogRef.close(newCost);
         });
 
     }
