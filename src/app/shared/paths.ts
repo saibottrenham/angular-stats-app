@@ -3,6 +3,6 @@
 export const propertiesGroupPath = 'propertiesGroup';
 export const propertiesPath = 'properties';
 export const costsPath = 'costs';
-export const userPath = 'users';
+export const usersPath = 'users';
 export const tennantsPath = 'tennants';
-export const propertyManagerPath = 'propertyManagers';
+export const propertyManagersPath = 'propertyManagers';

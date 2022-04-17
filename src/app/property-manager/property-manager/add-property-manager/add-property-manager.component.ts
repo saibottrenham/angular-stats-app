@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PropertyManager } from '../../property-manager.model';
+import { propertyManagersPath } from '../../../shared/paths';
 import { UiService } from '../../../shared/ui.service';
 
 @Component({
@@ -10,10 +11,10 @@ import { UiService } from '../../../shared/ui.service';
     styleUrls: ['add-property-manager.component.scss']
 })
 export class AddPropertyManagerComponent implements OnInit {
-    managerForm: FormGroup;
+    propertyManagerForm: FormGroup;
     imageUrl: string = null;
-    manager: PropertyManager;
-    propertyManagerPath = 'PropertyManager';
+    propertyManager: PropertyManager;
+    propertyManagersPath = propertyManagersPath;
     uploadProgress = 0;
 
     constructor(
@@ -23,7 +24,7 @@ export class AddPropertyManagerComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.managerForm = new FormGroup({
+        this.propertyManagerForm = new FormGroup({
             name: new FormControl(this.data?.name, {validators: [Validators.required]}),
             mobile: new FormControl(this.data?.mobile, { validators: [Validators.required] }),
             email: new FormControl(this.data?.email, { validators: [Validators.required] }),
@@ -33,15 +34,16 @@ export class AddPropertyManagerComponent implements OnInit {
     }
 
     onSubmit() {
-        this.uiService.set({ 
-            ...this.managerForm.value,
+        const newPropertyManager =  { 
+            ...this.propertyManagerForm.value,
             imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
             id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
             created: this.data?.created ? this.data.created : new Date(),
             lastUpdated: new Date(),
             userId: localStorage.getItem('userId')
-        }, this.propertyManagerPath).then(() => {
-            this.dialogRef.close();
+        }
+        this.uiService.set(newPropertyManager, propertyManagersPath).then(() => {
+            this.dialogRef.close(newPropertyManager);
         });
 
     }

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Tennant } from '../../tennant.model';
 import { UiService } from '../../../shared/ui.service';
+import { tennantsPath } from '../../../shared/paths';
 
 @Component({
     selector: 'app-add-property-manager',
@@ -13,7 +14,7 @@ export class AddTennantComponent implements OnInit {
     tennantForm: FormGroup;
     imageUrl: string = null;
     tennant: Tennant;
-    tennantPath = 'Tennant';
+    tennantsPath = tennantsPath; 
     uploadProgress = 0;
 
     constructor(
@@ -41,7 +42,7 @@ export class AddTennantComponent implements OnInit {
             lastUpdated: new Date(),
             userId: localStorage.getItem('userId')
         }
-        this.uiService.set(newTennant, this.tennantPath).then(() => {
+        this.uiService.set(newTennant, this.tennantsPath).then(() => {
             this.dialogRef.close(newTennant);
         });
     }

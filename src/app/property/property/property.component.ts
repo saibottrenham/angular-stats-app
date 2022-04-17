@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { AddPropertyComponent } from './add-property/add-property.component';
 import { Property } from '../property.model';
 import { UiService } from '../../shared/ui.service';
-import { propertiesPath } from '../../shared/paths';
+import { propertiesGroupPath, propertiesPath } from '../../shared/paths';
 
 @Component({
   selector: 'app-property',
@@ -35,20 +35,26 @@ export class PropertyComponent implements OnInit {
 
   addProperty() {
     this.dialog.open(AddPropertyComponent, {
-      width: '600px',
+      width: '100%',
       data: {}
     });
   }
 
   editPoperty(e: Property) {
     this.dialog.open(AddPropertyComponent, {
-      width: '600px',
+      width: '100%',
       data: {...e}
     });
   }
 
   deleteProperty(e: Property) {
-    this.uiService.delete(e, propertiesPath);
+  this.uiService.delete(e, propertiesPath).then(
+    () => {
+      this.uiService.scanObjectsForItemToDelete(e.id, 'properties', propertiesGroupPath);
+    },
+    err => {
+      console.log(err);
+    }
+  );
   }
-
 }

@@ -12,10 +12,10 @@
                 <img [src]="propertyManager.imageUrl" alt="{{ propertyManager.name }}">
             </div>
             <mat-card-actions align="right">
-                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editManager(propertyManager)">
+                <button mat-mini-fab color="" aria-label="Add Another PropertyManager" (click)="editPropertyManager(propertyManager)">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deleteManager(propertyManager)">
+                <button mat-mini-fab color="warn" aria-label="Add Another PropertyManager" (click)="deletePropertyManager(propertyManager)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-card-actions>
@@ -23,7 +23,7 @@
     </div>
     <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%">
         <mat-card fxLayoutAlign="center">
-            <button mat-fab color="primary" aria-label="Add Another PropertyManager" (click)="addManager()">
+            <button mat-fab color="primary" aria-label="Add Another PropertyManager" (click)="addPropertyManager()">
                 <mat-icon>add</mat-icon>
             </button>
         </mat-card>

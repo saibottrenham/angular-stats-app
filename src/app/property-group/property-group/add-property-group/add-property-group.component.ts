@@ -41,7 +41,6 @@ export class AddPropertyGroupComponent implements OnInit {
     AddCostComponent = AddCostComponent;
     AddPropertyComponent = AddPropertyComponent;
 
-          // for loop
     viewGroups: any = {
         properties: {
           path: propertiesPath,

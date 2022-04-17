@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AddPropertyManagerComponent } from './add-property-manager/add-property-manager.component';
 import { PropertyManager } from '../property-manager.model';
+import { Subscription } from 'rxjs';
 import { UiService } from '../../shared/ui.service';
-import { propertyManagerPath } from '../../shared/paths';
+import { propertiesPath, propertyManagersPath } from '../../shared/paths';
+import { AddPropertyManagerComponent } from './add-property-manager/add-property-manager.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-property-manager',
@@ -12,16 +13,16 @@ import { propertyManagerPath } from '../../shared/paths';
 })
 export class PropertyManagerComponent implements OnInit {
   propertyManagers: PropertyManager[] = [];
+  sub: Subscription;
   loading: boolean = true;
 
   constructor(
-      private dialog: MatDialog,
-      public dialogRef: MatDialogRef<PropertyManager>,
-      private uiService: UiService,
-  ) { }
+    private dialog: MatDialog,
+    private uiService: UiService
+    ) { }
 
   ngOnInit(): void {
-    this.uiService.get(propertyManagerPath).subscribe(
+    this.sub = this.uiService.get(propertyManagersPath).subscribe(
       res => {
         this.propertyManagers = res;
         this.loading = false;
@@ -29,21 +30,32 @@ export class PropertyManagerComponent implements OnInit {
     )
   }
 
-  addManager() {
+  onDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  addPropertyManager() {
     this.dialog.open(AddPropertyManagerComponent, {
-      width: '600px',
+      width: '100%',
+      data: {}
     });
   }
 
-  editManager(e: PropertyManager) {
+  editPropertyManager(e: PropertyManager) {
     this.dialog.open(AddPropertyManagerComponent, {
       width: '600px',
-      data: e
+      data: {...e}
     });
   }
 
-  deleteManager(e: PropertyManager) {
-    this.uiService.delete(e, propertyManagerPath);
+  deletePropertyManager(e: PropertyManager) {
+    this.uiService.delete(e, propertyManagersPath).then(
+      () => {
+        this.uiService.scanObjectsForItemToDelete(e.id, 'propertyManagers', propertiesPath);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
-
 }

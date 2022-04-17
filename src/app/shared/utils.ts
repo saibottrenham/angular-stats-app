@@ -6,7 +6,7 @@ export function addToObject(
 ): void {
         obj[ctrl].setValue(null);
         obj.data[elementsList] = obj.data[elementsList]?.length ? [...obj.data[elementsList], element.id] : [element.id];
-        obj[tableElementsList] = obj.data[elementsList].map(id => obj[allElementsList].find(el => el.id === id)).filter(
+        obj[tableElementsList] = obj.data[elementsList].map(id => obj[allElementsList] && obj[allElementsList].find(el => el.id === id)).filter(
             el => el !== undefined
         );
         obj[elementsList] = obj[allElementsList].filter(cost => !obj.data[elementsList].includes(cost.id));

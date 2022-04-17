@@ -46,6 +46,25 @@ export class UiService {
     const userId = this.checkIfUserLoggedIn();
     return this.db.collection(path, ref => ref.where('userId', '==', userId)).doc(e.id).delete()
   }
+
+  scanObjectsForItemToDelete(itemId: string, attribute: string, path: string) {
+    const userId = this.checkIfUserLoggedIn();
+    return this.db.collection(path, ref => ref.where('userId', '==', userId)).valueChanges({ idField: 'id' })
+      .subscribe(
+        res => {
+          res.forEach(element => {
+            element[attribute].forEach(
+              id => {
+                if (id === itemId) {
+                  element[attribute].splice(element[attribute].indexOf(id), 1);
+                }
+              }
+            );
+            this.set(element, path);
+          }
+        )
+    });
+  }
   
   deleteImageFromStorage(imageUrl: string) {
     this.checkIfUserLoggedIn();

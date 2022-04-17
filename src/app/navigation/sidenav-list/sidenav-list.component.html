@@ -38,7 +38,10 @@
     <mat-icon>person</mat-icon>
     <span class="nav-caption">Tennants</span>
   </a>
-  <a mat-list-item routerLink="/propertyManagers" (click)="onClose()" *ngIf="(isAuth$ | async)">
+  <a mat-list-item routerLink="/propertyManagers"
+  routerLinkActive
+  #routerLinkActiveInstance="routerLinkActive"
+  [class.list-item-active]="routerLinkActiveInstance.isActive"(click)="onClose()" *ngIf="(isAuth$ | async)">
     <mat-icon>badge</mat-icon>
     <span class="nav-caption">Property Managers</span>
   </a>

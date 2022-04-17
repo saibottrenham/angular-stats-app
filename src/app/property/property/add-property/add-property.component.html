@@ -6,7 +6,7 @@
               <app-image-upload
                       (urlEmitter)="imageUrl = $event"
                       (progressEmitter)="uploadProgress = $event"
-                      [path]="propertyPath"
+                      [path]="propertiesPath"
                       [alreadyPresentUrl]="data?.imageUrl"
               ></app-image-upload>
           </section>
@@ -27,10 +27,16 @@
             <div class="table-container" >
               <app-shared-table 
                 [dataSource]="tableTennants"
-                [columnsToDisplay]="['name', 'address', 'mobile', 'email']"
-                (removeEmitter)="removeTennantFromProperty($event)"
-                (editEmitter)="editTennant($event)"
-                (deleteEmitter)="delete($event, tennantsPath)"
+                [columnsToDisplay]="viewGroups.tennants.columns"
+                (removeEmitter)="removeFromObject(
+                  this, 
+                  $event, 
+                  viewGroups.tennants.elements,
+                  viewGroups.tennants.tableElements,
+                  propertiesPath
+                )"
+                (editEmitter)="edit($event, AddTennantComponent)"
+                (deleteEmitter)="remove($event, tennantsPath, viewGroups.tennants)"
               ></app-shared-table>
             </div>
             <mat-form-field appearance="standard">
@@ -58,16 +64,20 @@
                   *ngIf="!tennantTrigger.panelOpen"
                   type="button" matSuffix mat-icon-button
                   color="primary" aria-label="add Tennant"
-                 (click)="addTennant(); $event.stopPropagation()">
+                 (click)="add(
+                  AddTennantComponent, 
+                  viewGroups.tennants
+                 ); $event.stopPropagation()">
                  <mat-icon>add</mat-icon>
                 </button>
-              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="addTennantToProperty(
+              <mat-autocomplete #tennant="matAutocomplete" (optionSelected)="addToObject(
+                  this, 
                   $event.option.value,
-                  tableTennants, 
-                  tennants, 
-                  'tennants', 
-                  tennantsPath, 
-                  tennantCtrl
+                  viewGroups.tennants.elements, 
+                  viewGroups.tennants.tableElements,
+                  viewGroups.tennants.allElements,
+                  viewGroups.tennants.ctrl,
+                  propertiesPath 
                 )">
                 <mat-option *ngFor="let tennant of filteredTennants | async" [value]="tennant">
                   {{tennant.name}}
@@ -77,41 +87,55 @@
             <div class="table-container" >
               <app-shared-table 
                 [dataSource]="tablePropertyManagers" 
-                [columnsToDisplay]="['name', 'address', 'mobile', 'email']"
-                (removeEmitter)="removePropertyManageFromProperty($event)"
-                (editEmitter)="editPropertyManager($event)"
-                (deleteEmitter)="delete($event, propertyManagerPath)"
+                [columnsToDisplay]="viewGroups.propertyManagers.columns"
+                (removeEmitter)="removeFromObject(
+                  this,
+                  $event, 
+                  viewGroups.propertyManagers.elements,
+                  viewGroups.propertyManagers.tableElements,
+                  propertiesPath
+                )"
+                (editEmitter)="edit($event, AddPropertyManagerComponent)"
+                (deleteEmitter)="remove($event, propertyManagersPath, viewGroups.propertyManagers)"
               >
               </app-shared-table>
             </div>
             <mat-form-field appearance="standard">
-              <mat-label>Add Poperty Manager</mat-label>
+              <mat-label>Add Property Manager</mat-label>
               <input type="text"
                      placeholder="Add a Property Manager"
                      aria-label="add a Property Manager input"
                      matInput
                      [formControl]="propertyManagerCtrl"
                      [matAutocomplete]="propertyManager"
-                     #propertyManager="matAutocompleteTrigger"
-                     (click)="propertyManager.openPanel()"
+                     #propertyManagerTrigger="matAutocompleteTrigger"
+                     (click)="propertyManagerTrigger.openPanel()"
               >
               <button 
                 title="Close Property Manager autofill window"
-                *ngIf="propertyManager.panelOpen"
+                *ngIf="propertyManagerTrigger.panelOpen"
                 type="button" matSuffix mat-icon-button
                 color="primary" aria-label="close property manager autocomplete"
-                (click)="propertyManager.closePanel(); $event.stopPropagation()">
+                (click)="propertyManagerTrigger.closePanel(); $event.stopPropagation()">
                 <mat-icon>cancel</mat-icon>
              </button>
               <button 
                 title="Add a new Property Mangaer"
-                *ngIf="!propertyManager.panelOpen"
+                *ngIf="!propertyManagerTrigger.panelOpen"
                 type="button" matSuffix mat-icon-button
                 color="primary" aria-label="add property manager"
-                (click)="addPropertyManager(); $event.stopPropagation()">
+                (click)="add(AddPropertyManagerComponent, viewGroups.propertyManagers); $event.stopPropagation()">
                 <mat-icon>add</mat-icon>
              </button>
-              <mat-autocomplete #propertyManager="matAutocomplete" (optionSelected)="addPropertyManagerToProperty($event.option.value)">
+              <mat-autocomplete #propertyManager="matAutocomplete" (optionSelected)="addToObject(
+                this, 
+                $event.option.value,
+                viewGroups.propertyManagers.elements, 
+                viewGroups.propertyManagers.tableElements,
+                viewGroups.propertyManagers.allElements,
+                viewGroups.propertyManagers.ctrl,
+                propertiesPath 
+              )">
                 <mat-option *ngFor="let propertyManager of filteredPropertyManagers | async" [value]="propertyManager">
                   {{propertyManager.name}}
                 </mat-option>
