@@ -144,33 +144,33 @@ export class AddPropertyComponent implements OnInit {
     addTennantToProperty(element: any, tableList: any, list: any, attribute: string, path: string, ctrl): void {
       tableList.push(element);
       list = list.filter(listElement => listElement.id !== element.id);
-      this.uiService.addToObjectArray(this.data, element, attribute, path, ctrl).then(() => {}, err => {
-        console.log(err);
-        list.push(element);
-        tableList = tableList.filter(listElement => listElement.id !== element.id);
-      });
+      // this.uiService.addToObjectArray(this.data, element, attribute, path, ctrl).then(() => {}, err => {
+      //   console.log(err);
+      //   list.push(element);
+      //   tableList = tableList.filter(listElement => listElement.id !== element.id);
+      // });
     }
 
     removeTennantFromProperty(tennant: Tennant) {
-      this.tennants.push(tennant);
-      this.tableTennants = this.tableTennants.filter(tennant => tennant.id !== tennant.id);
-      this.uiService.removeFromObjectArray(this.data, tennant, 'tennants', tennantsPath).then(() => {
-        this.tableTennants.push(tennant);
-        this.tennants = this.tennants.filter(tennant => tennant.id !== tennant.id);
-      });
+      // this.tennants.push(tennant);
+      // this.tableTennants = this.tableTennants.filter(tennant => tennant.id !== tennant.id);
+      // this.uiService.removeFromObjectArray(this.data, tennant, 'tennants', tennantsPath).then(() => {
+      //   this.tableTennants.push(tennant);
+      //   this.tennants = this.tennants.filter(tennant => tennant.id !== tennant.id);
+      // });
     }
 
     addPropertyManagerToProperty(propertyManager: PropertyManager) {
-      this.uiService.addToObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath, this.propertyManagerCtrl).then(() => {
-        this.tablePropertyManagers.push(propertyManager);
-        this.propertyManagers = this.propertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
-      });
+      // this.uiService.addToObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath, this.propertyManagerCtrl).then(() => {
+      //   this.tablePropertyManagers.push(propertyManager);
+      //   this.propertyManagers = this.propertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
+      // });
     }
 
     removePropertyManageFromProperty(propertyManager: PropertyManager) {
-      this.uiService.removeFromObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath).then(() => {
-        this.propertyManagers.push(propertyManager);
-        this.tablePropertyManagers = this.tablePropertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
-      });
+      // this.uiService.removeFromObjectArray(this.data, propertyManager, 'propertyManagers', propertyManagerPath).then(() => {
+      //   this.propertyManagers.push(propertyManager);
+      //   this.tablePropertyManagers = this.tablePropertyManagers.filter(propertyManager => propertyManager.id !== propertyManager.id);
+      // });
     }
   }

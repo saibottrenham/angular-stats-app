@@ -27,7 +27,6 @@ export class SharedTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.dataSource) {
       this.dataSource = changes.dataSource.currentValue;
-      console.log(this.dataSource);
     }
   }
 

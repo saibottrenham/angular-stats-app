@@ -4,7 +4,6 @@ import { AuthService } from '../auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
 
 @Injectable()
 export class UiService {
@@ -46,16 +45,6 @@ export class UiService {
   delete(e: any, path: string) {
     const userId = this.checkIfUserLoggedIn();
     return this.db.collection(path, ref => ref.where('userId', '==', userId)).doc(e.id).delete()
-  }
-
-  addToObjectArray(data: any, element: any, attribute: string, path: string, ctrl: FormControl) {
-    data[attribute] = data[attribute]?.length ? [...data[attribute], element.id] : [element.id];
-    return this.set({...data, lastUpdated: new Date()}, path);
-  }
-
-  removeFromObjectArray(data: any, element: any, attribute: string, path: string) {
-    data[attribute] = data[attribute]?.length ? data[attribute].filter(id => id !== element.id) : [];
-    return this.set({...data, lastUpdated: new Date()}, path);
   }
   
   deleteImageFromStorage(imageUrl: string) {

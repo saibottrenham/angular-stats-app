@@ -39,7 +39,7 @@ export class PropertyGroupComponent implements OnInit, OnDestroy {
   addPropertyGroup() {
     this.dialog.open(AddPropertyGroupComponent, {
       width: '100%',
-      data: null
+      data: {}
     });
   }
 
