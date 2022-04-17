@@ -20,7 +20,7 @@ export class AddTennantComponent implements OnInit {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: Tennant,
         private uiService: UiService,
-        public dialogRef: MatDialogRef<Tennant>,
+        public dialogRef: MatDialogRef<AddTennantComponent>,
     ) {  }
 
     ngOnInit(): void {
@@ -41,8 +41,9 @@ export class AddTennantComponent implements OnInit {
             created: this.data?.created ? this.data.created : new Date(),
             lastUpdated: new Date(),
             userId: localStorage.getItem('userId')
-        }
-        this.uiService.set(newTennant, this.tennantsPath).then(() => {
+        };
+        console.log(newTennant);
+        this.uiService.set(newTennant, tennantsPath).then(() => {
             this.dialogRef.close(newTennant);
         });
     }

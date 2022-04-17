@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddCostComponent } from './add-cost/add-cost.component';
 import { Cost } from '../cost.model';
 import { UiService } from '../../../shared/ui.service';
-import { costsPath } from '../../../shared/paths';
+import { costsPath, propertiesGroupPath } from '../../../shared/paths';
 
 
 @Component({
@@ -34,20 +34,26 @@ export class CostComponent implements OnInit {
 
   addCost() {
     this.dialog.open(AddCostComponent, {
-      width: '600px',
+      width: '100%',
       data: {}
     });
   }
 
   editCost(e: Cost) {
     this.dialog.open(AddCostComponent, {
-      width: '600px',
-      data: e
+      width: '100%',
+      data: {...e}
     });
   }
 
   deleteCost(e: Cost) {
-    this.uiService.delete(e, costsPath);
+    this.uiService.delete(e, costsPath).then(
+      () => {
+        this.uiService.scanObjectsForItemToDelete(e.id, 'costs', propertiesGroupPath);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
-
 }

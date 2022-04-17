@@ -33,13 +33,13 @@ export class AddPropertyComponent implements OnInit {
     filteredTennants: Observable<BaseModel[]>;
     filteredPropertyManagers: Observable<BaseModel[]>;
 
-    propertyManagers: PropertyManager[] = [];
-    tablePropertyManagers: PropertyManager[] = [];
-    allPropertyManagers: PropertyManager[] = [];
-
     tennants: Tennant[] = [];
     tableTennants: Tennant[] = [];
     allTennants: Tennant[] = [];
+
+    propertyManagers: PropertyManager[] = [];
+    tablePropertyManagers: PropertyManager[] = [];
+    allPropertyManagers: PropertyManager[] = [];
 
     subs: Subscription[] = [];
     propertiesPath = propertiesPath;
@@ -100,7 +100,7 @@ onDestroy() {
 }
 
 onSubmit() {
-  this.uiService.set({
+  const newProperty = {
     ...this.propertyForm.value,
     imageUrl: this.imageUrl ? this.imageUrl : this.data?.imageUrl || null,
     id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
@@ -109,24 +109,26 @@ onSubmit() {
     tennants: this.data?.tennants.length ? this.data.tennants : [],
     propertyManagers: this.data?.propertyManagers.length ? this.data.propertyManagers : [],
     userId: localStorage.getItem('userId')
-  }, propertiesPath).then(() => {
-    this.dialogRef.close();
+  }
+  this.uiService.set(newProperty, propertiesPath).then(() => {
+    this.dialogRef.close(newProperty);
   })
 }
 
   edit(element: any, component: any): void {
     this.dialog.open(component, {
-      width: '600px',
-      data: element
+      width: '100%',
+      data: {...element}
     });
   }
 
   add(component: any, group: any): void {
     const dialogref = this.dialog.open(component, {
-        width: '600px',
+        width: '100%',
         data: {}
       });
-    dialogref.afterClosed().subscribe((element: Property) => {
+    dialogref.afterClosed().subscribe(element => {
+      console.log(element)
       if (element) this.addToObject(
           this, element, group.elements, group.tableElements, group.allElements, group.ctrl, propertiesPath
         );

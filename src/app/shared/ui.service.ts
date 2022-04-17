@@ -49,7 +49,7 @@ export class UiService {
 
   scanObjectsForItemToDelete(itemId: string, attribute: string, path: string) {
     const userId = this.checkIfUserLoggedIn();
-    return this.db.collection(path, ref => ref.where('userId', '==', userId)).valueChanges({ idField: 'id' })
+    return this.db.collection(path, ref => ref.where('userId', '==', userId)).get()
       .subscribe(
         res => {
           res.forEach(element => {
