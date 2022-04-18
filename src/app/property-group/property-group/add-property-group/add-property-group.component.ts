@@ -103,14 +103,14 @@ export class AddPropertyGroupComponent implements OnInit {
 
     edit(element: any, component: any): void {
       this.dialog.open(component, {
-        width: '600px',
+        width: '100%',
         data: element
       });
     }
 
     add(component: any, group: any): void {
       const dialogref = this.dialog.open(component, {
-          width: '600px',
+          width: '100%',
           data: {}
         });
       dialogref.afterClosed().subscribe((element: Property) => {

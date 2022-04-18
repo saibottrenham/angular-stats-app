@@ -18,6 +18,7 @@
             </mat-form-field>
             <div class="table-container" >
               <app-shared-table 
+                [title]="'Properties'"
                 [dataSource]="tableProperties"
                 [columnsToDisplay]="viewGroups.properties.columns"
                 (removeEmitter)="removeFromObject(
@@ -78,6 +79,7 @@
             </mat-form-field>
             <div class="table-container" >
               <app-shared-table 
+                [title]="'Costs'"
                 [dataSource]="tableCosts" 
                 [columnsToDisplay]="viewGroups.costs.columns"
                 (removeEmitter)="removeFromObject(

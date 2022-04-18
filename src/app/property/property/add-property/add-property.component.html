@@ -25,7 +25,8 @@
               <input matInput formControlName="price" placeholder="Price" required>
             </mat-form-field>
             <div class="table-container" >
-              <app-shared-table 
+              <app-shared-table
+                [title]="'Tennants'"
                 [dataSource]="tableTennants"
                 [columnsToDisplay]="viewGroups.tennants.columns"
                 (removeEmitter)="removeFromObject(
@@ -86,6 +87,7 @@
             </mat-form-field>
             <div class="table-container" >
               <app-shared-table 
+                [title]="'Property Managers'"
                 [dataSource]="tablePropertyManagers" 
                 [columnsToDisplay]="viewGroups.propertyManagers.columns"
                 (removeEmitter)="removeFromObject(

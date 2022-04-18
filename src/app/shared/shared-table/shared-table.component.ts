@@ -16,6 +16,7 @@ import { BaseModel } from '../common-model';
 })
 export class SharedTableComponent implements OnChanges {
   @Input() dataSource: BaseModel[] = [];
+  @Input() title: string = '';
   @Input() columnsToDisplay: string[] = [];
   @Output() deleteEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Output() editEmitter: EventEmitter<string> = new EventEmitter<string>();

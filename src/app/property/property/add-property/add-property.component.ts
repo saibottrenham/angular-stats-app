@@ -58,7 +58,7 @@ export class AddPropertyComponent implements OnInit {
         allElements: 'allTennants',
         filteredElements: 'filteredTennants',
         ctrl: 'tennantCtrl',
-        columns: ['name', 'email', 'removeable', 'actions'],
+        columns: ['image', 'name', 'rent', 'removeable', 'actions'],
       }, 
       propertyManagers: {
         path: propertyManagersPath,
@@ -67,7 +67,7 @@ export class AddPropertyComponent implements OnInit {
         allElements: 'allPropertyManagers',
         filteredElements: 'filteredPropertyManagers',
         ctrl: 'propertyManagerCtrl',
-        columns: ['name', 'email', 'removeable', 'actions']
+        columns: ['image', 'name', 'email', 'removeable', 'actions']
       }
     }
 

@@ -43,7 +43,7 @@ export class PropertyManagerComponent implements OnInit {
 
   editPropertyManager(e: PropertyManager) {
     this.dialog.open(AddPropertyManagerComponent, {
-      width: '600px',
+      width: '100%',
       data: {...e}
     });
   }
