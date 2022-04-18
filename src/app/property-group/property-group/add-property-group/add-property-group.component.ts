@@ -49,7 +49,7 @@ export class AddPropertyGroupComponent implements OnInit {
           allElements: 'allProperties',
           filteredElements: 'filteredProperties',
           ctrl: 'propertyCtrl',
-          columns: ['name', 'address', 'removeable', 'actions'],
+          columns: ['image', 'name', 'address', 'removeable', 'actions'],
         }, 
         costs: {
           path: costsPath,
@@ -58,7 +58,7 @@ export class AddPropertyGroupComponent implements OnInit {
           allElements: 'allCosts',
           filteredElements: 'filteredCosts',
           ctrl: 'costCtrl',
-          columns: ['name', 'amount', 'frequency', 'removeable', 'actions']
+          columns: ['image', 'name', 'amount', 'frequency', 'removeable', 'actions']
         }
       }
 
