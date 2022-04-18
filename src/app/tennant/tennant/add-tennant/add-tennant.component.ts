@@ -26,6 +26,7 @@ export class AddTennantComponent implements OnInit {
     ngOnInit(): void {
         this.tennantForm = new FormGroup({
             name: new FormControl(this.data?.name, {validators: [Validators.required]}),
+            rent: new FormControl(this.data?.rent, {validators: [Validators.required]}),
             mobile: new FormControl(this.data?.mobile, { validators: [Validators.required] }),
             email: new FormControl(this.data?.email, { validators: [Validators.required] }),
             address: new FormControl(this.data?.address, { validators: [Validators.required] }),
