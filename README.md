@@ -9,12 +9,20 @@ the past.
     * Ability to add property-groups, properties, tennants and property managers. (Done)
     * Automatic image compression on image upload (Done)
     * Ability to add reoccuring and one time cost. (Done)
-    * Review performance of individual properties, yearly earnings and profitability
+    * Setting up of nested and related entity relationships that use a noSQL database and enable many 2 many relationships (Done)
+    * Tree like architecture fo easy of manual data entry (Done)
+    * Realtime database and data entry updates (Done)
+    * Collaborative editing and adding of data using firebase (Done)
+
+### In progreass 
+    * Review performance of individual properties, yearly earnings and profitability (In progress)
+
+### TODO
     * Export reports
-    * Realtime database and data entry updates
-    * Collaborative editing and adding of data
+    * Bulk Portfolio adding option
     * Add Poperties to different Advertising channels with a click of a button
     * import advertising channel communications, funneled inside one platform
+    * Connect with bank account and review if tennants paid
+    * Automated follow up system to 
+    * Connect with 3rd party intrigation, salesforce, corelogic etc
 
-### Current State WIP
-    * Review performance of individual properties, yearly earnings and profitability
