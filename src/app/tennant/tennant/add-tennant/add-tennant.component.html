@@ -31,7 +31,7 @@
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">
             <button type="button" mat-raised-button [mat-dialog-close]="true" color="">close</button>
-            <button type="submit" mat-raised-button [disabled]="tennantForm.invalid || (uploadProgress > 0)" [mat-dialog-close]="true" color="primary">
+            <button type="submit" mat-raised-button [disabled]="tennantForm.invalid || (uploadProgress > 0)" color="primary">
                 {{data?.id ? 'Update' : 'Add' }}
             </button>
         </mat-card-actions>

@@ -3,9 +3,7 @@ import { filter } from "./filter";
 
 export function addToObject(
     obj: any, element: any, elementsList: string, tableElementsList: string, allElementsList: string, ctrl: string, path: string
-): void {
-        console.log(obj, element, elementsList, tableElementsList, allElementsList, ctrl, path);
-        console.log(obj.data[elementsList], obj.data[elementsList]?.length)    
+): void {    
         obj[ctrl].setValue(null);
         obj.data[elementsList] = obj.data[elementsList]?.length ? [...obj.data[elementsList], element.id] : [element.id];
         obj[tableElementsList] = obj.data[elementsList].map(id => obj[allElementsList].find(el => el.id === id)).filter(

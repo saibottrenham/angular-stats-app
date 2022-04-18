@@ -42,7 +42,6 @@ export class AddTennantComponent implements OnInit {
             lastUpdated: new Date(),
             userId: localStorage.getItem('userId')
         };
-        console.log(newTennant);
         this.uiService.set(newTennant, tennantsPath).then(() => {
             this.dialogRef.close(newTennant);
         });

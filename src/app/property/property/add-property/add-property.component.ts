@@ -78,7 +78,7 @@ constructor(
     @Inject(MAT_DIALOG_DATA) public data: Property,
     private dialog: MatDialog,
     private uiService: UiService,
-    public dialogRef: MatDialogRef<AddPropertyComponent>
+    public dialogRef: MatDialogRef<Property>
     ) {
       setFilters(this);
       initViewGroups(this);
@@ -106,8 +106,8 @@ onSubmit() {
     id: this.data?.id ? this.data.id : this.uiService.getFireStoreId(),
     lastUpdated: new Date(),
     createdDate: this.data?.created ? this.data.created : new Date(),
-    tennants: this.data?.tennants.length ? this.data.tennants : [],
-    propertyManagers: this.data?.propertyManagers.length ? this.data.propertyManagers : [],
+    tennants: this.data?.tennants?.length ? this.data.tennants : [],
+    propertyManagers: this.data?.propertyManagers?.length ? this.data.propertyManagers : [],
     userId: localStorage.getItem('userId')
   }
   this.uiService.set(newProperty, propertiesPath).then(() => {
@@ -128,7 +128,6 @@ onSubmit() {
         data: {}
       });
     dialogref.afterClosed().subscribe(element => {
-      console.log(element)
       if (element) this.addToObject(
           this, element, group.elements, group.tableElements, group.allElements, group.ctrl, propertiesPath
         );

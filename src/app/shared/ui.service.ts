@@ -52,15 +52,15 @@ export class UiService {
     return this.db.collection(path, ref => ref.where('userId', '==', userId)).get()
       .subscribe(
         res => {
-          res.forEach(element => {
-            element[attribute].forEach(
+          res && res.forEach(element => {
+            element[attribute] && element[attribute].forEach(
               id => {
                 if (id === itemId) {
                   element[attribute].splice(element[attribute].indexOf(id), 1);
                 }
+                this.set(element, path);
               }
             );
-            this.set(element, path);
           }
         )
     });

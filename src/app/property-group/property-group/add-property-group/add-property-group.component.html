@@ -146,7 +146,7 @@
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">
           <button type="button" mat-raised-button (click)="dialogRef.close()" color="">close</button>
-          <button type="submit" mat-raised-button [disabled]="propertyGroupForm.invalid || (uploadProgress > 0) " (click)="dialogRef.close()" color="primary">
+          <button type="submit" mat-raised-button [disabled]="propertyGroupForm.invalid || (uploadProgress > 0) " color="primary">
               {{data?.id ? 'Update' : 'Add' }}
           </button>
       </mat-card-actions>
