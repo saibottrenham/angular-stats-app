@@ -75,3 +75,26 @@ export function setFilters(obj: any) {
         );
     });
 }
+
+export function getFinancialYearDates(currentDate: Date, incrementCycle: number = 7) {
+    // Args: currentDate: Date, incrementCycle: number
+    // a function that returns a list of datestrings from the beginning of the current financial year to the current date.
+    // The datestring should be in the format YYYY-MM-DD.
+    // The first day of the financial year is the first day of July.
+    // The last day of the financial year is the last day of June.
+    let firstDay = new Date(currentDate.getFullYear(), 6, 1);
+    if (currentDate.getMonth() < 6) {
+      firstDay = new Date(currentDate.getFullYear() - 1, 6, 1);
+    }
+    let lastDay = new Date(currentDate.getFullYear(), 5, 30);
+    if (currentDate.getMonth() > 5) {
+      lastDay = new Date(currentDate.getFullYear() + 1, 5, 30);
+    }
+    const dates = [];
+    while (firstDay <= lastDay) {
+        // push date as string
+        dates.push(firstDay.toISOString().substring(0, 10));
+        firstDay.setDate(firstDay.getDate() + incrementCycle);
+    }
+    return dates;
+}

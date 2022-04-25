@@ -6,7 +6,7 @@ import { UiService } from '../../../shared/ui.service';
 import { tennantsPath } from '../../../shared/paths';
 
 @Component({
-    selector: 'app-add-property-manager',
+    selector: 'app-add-tennat',
     templateUrl: 'add-tennant.component.html',
     styleUrls: ['add-tennant.component.scss']
 })

@@ -6,3 +6,4 @@ export const costsPath = 'costs';
 export const usersPath = 'users';
 export const tennantsPath = 'tennants';
 export const propertyManagersPath = 'propertyManagers';
+export const tagsPath = 'tags';

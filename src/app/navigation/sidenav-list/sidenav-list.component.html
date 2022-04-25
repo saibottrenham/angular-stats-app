@@ -52,6 +52,13 @@
     <mat-icon>paid</mat-icon>
     <span class="nav-caption">Costs</span>
   </a>
+  <a mat-list-item routerLink="/tags" 
+  routerLinkActive
+  #routerLinkActiveInstance="routerLinkActive"
+  [class.list-item-active]="routerLinkActiveInstance.isActive"(click)="onClose()" *ngIf="(isAuth$ | async)">
+    <mat-icon>tag</mat-icon>
+    <span class="nav-caption">Tags</span>
+  </a>
   <a mat-list-item routerLink="/analytics" 
   routerLinkActive
   #routerLinkActiveInstance="routerLinkActive"

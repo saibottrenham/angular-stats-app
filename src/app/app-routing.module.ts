@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', component: WelcomeComponent },
   { path: 'propertyGroups', loadChildren: () => import('./property-group/property-group.module').then(m => m.PropertyGroupModule), canLoad: [AuthGuard] },
   { path: 'costs', loadChildren: () => import('./analytics/cost/cost.module').then(m => m.CostModule), canLoad: [AuthGuard] },
+  { path: 'tags', loadChildren: () => import('./tag/tag.module').then(m => m.TagModule), canLoad: [AuthGuard] },
   { path: 'properties', loadChildren: () => import('./property/property.module').then(m => m.PropertyModule), canLoad: [AuthGuard] },
   { path: 'analytics', loadChildren: () => import('./analytics/analytics.module').then(m => m.AnalyticsModule), canLoad: [AuthGuard] },
   { path: 'tennants', loadChildren: () => import('./tennant/tennant.module').then(m => m.TennantModule), canLoad: [AuthGuard] },
