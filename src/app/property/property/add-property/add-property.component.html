@@ -20,10 +20,6 @@
               <mat-label>Address</mat-label>
               <input matInput formControlName="address" placeholder="Address" required>
             </mat-form-field>
-            <mat-form-field appearance="standard">
-              <mat-label>Price</mat-label>
-              <input matInput formControlName="price" placeholder="Price" required>
-            </mat-form-field>
             <div class="table-container" >
               <app-shared-table
                 [title]="'Tennants'"
@@ -143,6 +139,67 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
+            <div class="table-container" >
+              <app-shared-table
+                [title]="'Costs'"
+                [dataSource]="tableCosts"
+                [columnsToDisplay]="viewGroups.costs.columns"
+                (removeEmitter)="removeFromObject(
+                  this, 
+                  $event, 
+                  viewGroups.costs.elements,
+                  viewGroups.costs.tableElements,
+                  propertiesPath
+                )"
+                (editEmitter)="edit($event, AddCostComponent)"
+                (deleteEmitter)="remove($event, costsPath, viewGroups.costs)"
+              ></app-shared-table>
+            </div>
+            <mat-form-field appearance="standard">
+              <mat-label>Costs</mat-label>
+                <input
+                  placeholder="Select a Cost"
+                  aria-label="Select a Cost"
+                  matInput
+                  [formControl]="costCtrl"
+                  [matAutocomplete]="cost"
+                  #costTrigger="matAutocompleteTrigger"
+                  (click)="costTrigger.openPanel()"
+                 >
+                 <button 
+                  *ngIf="costTrigger.panelOpen"
+                  title="close cost autofill window"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="close cost autocomplete"
+                  (click)="costTrigger.closePanel(); $event.stopPropagation()"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                <button 
+                  title="Add a new Cost"
+                  *ngIf="!costTrigger.panelOpen"
+                  type="button" matSuffix mat-icon-button
+                  color="primary" aria-label="add Cost"
+                 (click)="add(
+                  AddCostComponent, 
+                  viewGroups.costs
+                 ); $event.stopPropagation()">
+                 <mat-icon>add</mat-icon>
+                </button>
+              <mat-autocomplete #cost="matAutocomplete" (optionSelected)="addToObject(
+                  this, 
+                  $event.option.value,
+                  viewGroups.costs.elements, 
+                  viewGroups.costs.tableElements,
+                  viewGroups.costs.allElements,
+                  viewGroups.costs.ctrl,
+                  propertiesPath 
+                )">
+                <mat-option *ngFor="let cost of filteredCosts | async" [value]="cost">
+                  {{cost.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
             <mat-form-field appearance="standard">
               <mat-label>Notes</mat-label>
               <textarea matInput
@@ -152,7 +209,6 @@
               cdkAutosizeMinRows="4"
               cdkAutosizeMaxRows="10"></textarea>
             </mat-form-field>
-            <mat-checkbox formControlName="rentedOut">Rented Out?</mat-checkbox>
           </section>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">

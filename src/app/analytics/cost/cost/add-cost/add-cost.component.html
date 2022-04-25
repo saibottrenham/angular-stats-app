@@ -25,6 +25,67 @@
                       <mat-option value="one-time">One Time</mat-option>
                     </mat-select>
                 </mat-form-field>
+                <div class="table-container" >
+                    <app-shared-table
+                      [title]="'Tags'"
+                      [dataSource]="tableTags"
+                      [columnsToDisplay]="viewGroups.tags.columns"
+                      (removeEmitter)="removeFromObject(
+                        this, 
+                        $event, 
+                        viewGroups.tags.elements,
+                        viewGroups.tags.tableElements,
+                        costsPath
+                      )"
+                      (editEmitter)="edit($event, AddTagComponent)"
+                      (deleteEmitter)="remove($event, tagsPath, viewGroups.tags)"
+                    ></app-shared-table>
+                </div>
+                <mat-form-field appearance="standard" *ngIf="!data?.tags?.length">
+                    <mat-label>Tags</mat-label>
+                      <input
+                        placeholder="Select a Tag"
+                        aria-label="Select a Tag"
+                        matInput
+                        [formControl]="tagCtrl"
+                        [matAutocomplete]="tag"
+                        #tagTrigger="matAutocompleteTrigger"
+                        (click)="tagTrigger.openPanel()"
+                       >
+                       <button 
+                        *ngIf="tagTrigger.panelOpen"
+                        title="close tag autofill window"
+                        type="button" matSuffix mat-icon-button
+                        color="primary" aria-label="close tag autocomplete"
+                        (click)="tagTrigger.closePanel(); $event.stopPropagation()"
+                      >
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                      <button 
+                        title="Add a new Tag"
+                        *ngIf="!tagTrigger.panelOpen"
+                        type="button" matSuffix mat-icon-button
+                        color="primary" aria-label="add tag"
+                       (click)="add(
+                        AddTagComponent, 
+                        viewGroups.tags
+                       ); $event.stopPropagation()">
+                       <mat-icon>add</mat-icon>
+                      </button>
+                    <mat-autocomplete #tag="matAutocomplete" (optionSelected)="addToObject(
+                        this, 
+                        $event.option.value,
+                        viewGroups.tags.elements, 
+                        viewGroups.tags.tableElements,
+                        viewGroups.tags.allElements,
+                        viewGroups.tags.ctrl,
+                        costsPath 
+                      )">
+                      <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                        {{tag.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
                 <mat-form-field appearance="standard">
                     <mat-label>Amount</mat-label>
                     <input matInput formControlName="amount" placeholder="amount" required>
@@ -44,7 +105,7 @@
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">
             <button type="button" mat-raised-button (click)="dialogRef.close()" color="">close</button>
-            <button type="submit" mat-raised-button [disabled]="costForm.invalid || (uploadProgress > 0)" (click)="onSubmit()" color="primary">
+            <button type="submit" mat-raised-button [disabled]="costForm.invalid || (uploadProgress > 0) || !data?.tags?.length" (click)="onSubmit()" color="primary">
                 {{data?.id ? 'Update' : 'Add' }}
             </button>
         </mat-card-actions>

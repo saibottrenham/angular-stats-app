@@ -31,6 +31,17 @@
                     <mat-label>Address</mat-label>
                     <input matInput formControlName="address" placeholder="Address" required>
                 </mat-form-field>
+                <mat-form-field appearance="standard">
+                    <mat-label>Move in Date</mat-label>
+                    <input matInput [matDatepicker]="datepicker" formControlName="moveInDate">
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker>
+                      <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>Cancel</button>
+                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                      </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
             </section>
         </mat-card-content>
         <mat-card-actions fxLayoutAlign="center">

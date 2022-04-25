@@ -30,6 +30,7 @@ export class AddTennantComponent implements OnInit {
             mobile: new FormControl(this.data?.mobile, { validators: [Validators.required] }),
             email: new FormControl(this.data?.email, { validators: [Validators.required] }),
             address: new FormControl(this.data?.address, { validators: [Validators.required] }),
+            moveInDate: new FormControl(this.data?.moveInDate ? new Date(this.data?.moveInDate.seconds * 1000) : null, { validators: [Validators.required] }),
             imageUrl: new FormControl(this.data?.imageUrl),
         });
     }

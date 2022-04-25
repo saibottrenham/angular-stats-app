@@ -8,11 +8,13 @@ import { Tennant } from '../../../tennant/tennant.model';
 import { PropertyManager } from '../../../property-manager/property-manager.model';
 import { UiService } from '../../../shared/ui.service';
 import { BaseModel } from '../../../shared/common-model';
-import { propertiesPath, propertyManagersPath, tennantsPath } from '../../../shared/paths';
+import { costsPath, propertiesPath, propertyManagersPath, tennantsPath } from '../../../shared/paths';
 import { AddTennantComponent } from '../../../tennant/tennant/add-tennant/add-tennant.component';
 import { AddPropertyManagerComponent } from '../../../property-manager/property-manager/add-property-manager/add-property-manager.component';
 import { addToObject, deleteFromDB, initViewGroups, removeFromObject, setFilters } from '../../../shared/utils';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { AddCostComponent } from '../../../analytics/cost/cost/add-cost/add-cost.component';
+import { Cost } from '../../../analytics/cost/cost.model';
 
 @Component({
     selector: 'app-add-house',
@@ -29,9 +31,11 @@ export class AddPropertyComponent implements OnInit {
 
     tennantCtrl = new FormControl();
     propertyManagerCtrl = new FormControl();
+    costCtrl = new FormControl();
 
     filteredTennants: Observable<BaseModel[]>;
     filteredPropertyManagers: Observable<BaseModel[]>;
+    filteredCosts: Observable<BaseModel[]>;
 
     tennants: Tennant[] = [];
     tableTennants: Tennant[] = [];
@@ -41,14 +45,22 @@ export class AddPropertyComponent implements OnInit {
     tablePropertyManagers: PropertyManager[] = [];
     allPropertyManagers: PropertyManager[] = [];
 
+    costs: Cost[] = [];
+    tableCosts: Cost[] = [];
+    allCosts: Cost[] = [];
+
     subs: Subscription[] = [];
     propertiesPath = propertiesPath;
     tennantsPath = tennantsPath;
     propertyManagersPath = propertyManagersPath;
+    costsPath = costsPath;
+
     addToObject = addToObject;
     removeFromObject = removeFromObject;
+
     AddTennantComponent = AddTennantComponent;
     AddPropertyManagerComponent = AddPropertyManagerComponent;
+    AddCostComponent = AddCostComponent;
 
     viewGroups: any = {
       tennants: {
@@ -68,11 +80,21 @@ export class AddPropertyComponent implements OnInit {
         filteredElements: 'filteredPropertyManagers',
         ctrl: 'propertyManagerCtrl',
         columns: ['image', 'name', 'email', 'removeable', 'actions']
+      },
+      costs: {
+        path: costsPath,
+        elements: 'costs',
+        tableElements: 'tableCosts',
+        allElements: 'allCosts',
+        filteredElements: 'filteredCosts',
+        ctrl: 'costCtrl',
+        columns: ['image', 'name', 'amount', 'frequency', 'removeable', 'actions']
       }
     }
 
   @ViewChild('tennantTrigger') tennantTrigger: MatAutocompleteTrigger;
   @ViewChild('propertyManagerTrigger') propertyManagerTrigger: MatAutocompleteTrigger;
+  @ViewChild('costTrigger') costTrigger: MatAutocompleteTrigger;
 
 constructor(
     @Inject(MAT_DIALOG_DATA) public data: Property,
@@ -90,8 +112,6 @@ ngOnInit(): void {
     name: new FormControl(this.data?.name, [Validators.required]),
     address: new FormControl(this.data?.address, [Validators.required]),
     imageUrl: new FormControl(this.data?.imageUrl),
-    price: new FormControl(this.data?.price, [Validators.required]),
-    rentedOut: new FormControl(this.data?.rentedOut, [Validators.required])
   });
 }  
 
@@ -108,6 +128,7 @@ onSubmit() {
     createdDate: this.data?.created ? this.data.created : new Date(),
     tennants: this.data?.tennants?.length ? this.data.tennants : [],
     propertyManagers: this.data?.propertyManagers?.length ? this.data.propertyManagers : [],
+    costs: this.data?.costs?.length ? this.data.costs : [],
     userId: localStorage.getItem('userId')
   }
   this.uiService.set(newProperty, propertiesPath).then(() => {

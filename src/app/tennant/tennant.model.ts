@@ -5,4 +5,5 @@ export interface Tennant extends BaseModel {
     address: string;
     rent: number;
     email: string;
+    moveInDate?: {seconds: number, nanoseconds: number};
 }
